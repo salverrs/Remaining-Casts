@@ -6,7 +6,6 @@ import com.salverrs.RemainingCasts.Model.RuneChanges;
 import com.salverrs.RemainingCasts.Model.SpellFilterOption;
 import com.salverrs.RemainingCasts.Util.SpellIds;
 import com.salverrs.RemainingCasts.Model.SpellInfo;
-import com.sun.javafx.iio.ImageStorage;
 import net.runelite.api.Client;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.SpriteID;
