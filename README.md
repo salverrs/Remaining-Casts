@@ -20,7 +20,9 @@ All features can be enabled/disabled and configured further through the plugin s
 ![image](https://user-images.githubusercontent.com/109300410/209392855-c9eeeb02-3234-40d6-a17a-167e57e5c61d.png)
 
 
-### Known Issues
+### Notes
 
-- *Enchant Crossbow Bolt* is not supported yet.
-- Remaining casts will not be shown when choosing an autocast spell.
+- Doesn't currently support powered staves.
+- Bryophyta's staff is semi-supported, it's assumed to provide infinite nature runes but charges are not tracked.
+- *Enchant Crossbow Bolt* isn't currently supported.
+- Remaining casts will not be shown in the tooltip when choosing an autocast spell.
