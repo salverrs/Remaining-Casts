@@ -11,7 +11,10 @@ import net.runelite.api.MenuEntry;
 import net.runelite.api.SpriteID;
 import net.runelite.api.events.ClientTick;
 import net.runelite.api.events.MenuOptionClicked;
+import net.runelite.api.events.WidgetClosed;
+import net.runelite.api.events.WidgetLoaded;
 import net.runelite.api.widgets.Widget;
+import net.runelite.api.widgets.WidgetID;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.game.SpriteManager;
@@ -31,6 +34,7 @@ public class RemainingCastTracker {
     private Queue<SpellInfo> spellQueue = new LinkedList<>();
     private Map<Integer, Integer> runeCount;
     private boolean active = false;
+    private boolean otherItemContainerOpen = false;
     private int lastCastSpriteId = -1;
     private String lastCastSpellName;
     private Plugin plugin;
@@ -61,7 +65,10 @@ public class RemainingCastTracker {
             return;
 
         final RuneChanges changes = event.getChanges();
-        final SpellInfo spellInfo = getLastSpellCasted(changes);
+        SpellInfo spellInfo = getLastSpellCasted(changes);
+
+        if (otherItemContainerOpen) // Ignore all item deposits
+            spellInfo = null;
 
         runeCount = changes.getCurrentRunes();
         updateCastBoxes(spellInfo);
@@ -99,6 +106,26 @@ public class RemainingCastTracker {
             lastCastSpriteId = spriteId;
     }
 
+    @Subscribe
+    public void onWidgetLoaded(WidgetLoaded event)
+    {
+        if (isOtherItemContainerWidget(event.getGroupId()))
+        {
+            otherItemContainerOpen = true;
+            lastCastSpriteId = -1;
+            lastCastSpellName = null;
+        }
+    }
+
+    @Subscribe
+    public void onWidgetClosed(WidgetClosed event)
+    {
+        if (isOtherItemContainerWidget(event.getGroupId()))
+        {
+            otherItemContainerOpen = false;
+        }
+    }
+
     public void start(Plugin plugin)
     {
         active = true;
@@ -115,7 +142,7 @@ public class RemainingCastTracker {
 
     private SpellInfo getLastSpellCasted(RuneChanges changes)
     {
-        SpellInfo spellInfo = SpellIds.getSpellBySpriteId(lastCastSpriteId);
+        SpellInfo spellInfo = lastCastSpriteId != -1 ? SpellIds.getSpellBySpriteId(lastCastSpriteId) : null;
         if (matchesSpellInfo(spellInfo, changes))
             return spellInfo;
 
@@ -148,7 +175,7 @@ public class RemainingCastTracker {
 
     private void updateCastBoxes(SpellInfo recentCast)
     {
-        if (castBoxes.containsKey(recentCast))
+        if (recentCast != null && castBoxes.containsKey(recentCast))
         {
             final RemainingCastsInfoBox infoBox = castBoxes.get(recentCast);
             infoBox.update(runeCount, true);
@@ -249,6 +276,20 @@ public class RemainingCastTracker {
         final Widget spellBook = client.getWidget(WidgetInfo.RESIZABLE_VIEWPORT_MAGIC_ICON);
         return spellBook != null ? spriteManager.getSprite(spellBook.getSpriteId(), 0)
                 : spriteManager.getSprite(SpriteID.TAB_MAGIC, 0);
+    }
+
+    private boolean isOtherItemContainerWidget(int groupId)
+    {
+        switch (groupId)
+        {
+            case WidgetID.BANK_GROUP_ID:
+            case WidgetID.DEPOSIT_BOX_GROUP_ID:
+            case WidgetID.TRADE_WINDOW_GROUP_ID:
+            case WidgetID.GROUP_STORAGE_GROUP_ID:
+                return true;
+            default:
+                return false;
+        }
     }
 
 }

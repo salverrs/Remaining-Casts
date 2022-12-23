@@ -24,7 +24,7 @@ public class SpellCost {
         for (int i = 0; i < runes.length; i++)
         {
             final int targetRuneId = runes[i];
-            if (!unlimitedRunes.contains(targetRuneId) && (!runeCount.containsKey(targetRuneId) || runeCount.get(targetRuneId) < quantities[i]))
+            if (!unlimitedRunes.contains(targetRuneId) && (!runeCount.containsKey(targetRuneId) || runeCount.get(targetRuneId) != quantities[i]))
                 return false;
         }
 

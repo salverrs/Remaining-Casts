@@ -111,8 +111,10 @@ public class TooltipCastUpdater {
                 return;
 
             final TooltipDetails details = getSpellTooltipDetails(spellTitle);
-            final SpellInfo spellInfo = SpellIds.getSpellByName(details.getSpellName());
+            if (details == null)
+                return;
 
+            final SpellInfo spellInfo = SpellIds.getSpellByName(details.getSpellName());
             if (spellInfo == null)
                 return;
 
@@ -137,9 +139,17 @@ public class TooltipCastUpdater {
 
     private TooltipDetails getSpellTooltipDetails(Widget titleWidget)
     {
-        final String[] split = titleWidget.getText().split(": ");
+        final String titleText = titleWidget.getText();
+        final String[] split = titleText.split(": ");
+        if (split.length < 2)
+            return null;
+
         final String name = split[1];
-        final String level = split[0].split("Level ")[1];
+        final String[] levelSplit = split[0].split("Level ");
+        if (levelSplit.length < 2)
+            return null;
+
+        final String level = levelSplit[1];
         return new TooltipDetails(name, level);
     }
 
