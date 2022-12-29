@@ -2,7 +2,9 @@
 
 This plugin shows the remaining number of casts for spells.
 
-The remaining casts can be displayed on the menu tooltip, spell tooltip and as individual infoboxes.
+- The remaining casts can be displayed on the menu tooltip, spell tooltip and as individual infoboxes.
+- Spells can be whitelisted, blacklisted and pinned by name.
+- Chat warnings can be configured at predefined cast amounts.
 
 All features can be enabled/disabled and configured further through the plugin settings.
 
@@ -17,12 +19,10 @@ All features can be enabled/disabled and configured further through the plugin s
 
 **Example Config**
 
-![image](https://user-images.githubusercontent.com/109300410/209392855-c9eeeb02-3234-40d6-a17a-167e57e5c61d.png)
-
+![image](https://user-images.githubusercontent.com/109300410/209987654-c51d36b9-2f85-4c47-9f00-20f0ae3af8a1.png)
 
 ### Notes
 
 - Doesn't currently support powered staves.
 - Bryophyta's staff is semi-supported, it's assumed to provide infinite nature runes but charges are not tracked.
-- *Enchant Crossbow Bolt* isn't currently supported.
-- Remaining casts will not be shown in the tooltip when choosing an autocast spell.
+- Required levels are shortened on spell tooltips to conserve space e.g. Level 15 -> [15].
