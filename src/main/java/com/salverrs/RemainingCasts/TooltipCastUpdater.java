@@ -29,7 +29,7 @@ public class TooltipCastUpdater {
     @Inject
     private ClientThread clientThread;
     @Inject
-    private RuneCountTracker runeCountTracker;
+    private CastSuppliesTracker runeCountTracker;
     @Inject RemainingCastsConfig config;
 
     public void start()

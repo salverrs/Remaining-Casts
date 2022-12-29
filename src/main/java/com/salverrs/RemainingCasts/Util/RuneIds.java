@@ -2,7 +2,9 @@ package com.salverrs.RemainingCasts.Util;
 
 import net.runelite.api.ItemID;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class RuneIds {
@@ -12,6 +14,8 @@ public class RuneIds {
     private static final Map<Integer, Integer> TomeMap = new HashMap<>();
     private static final Map<Integer, Integer> IngredientMap = new HashMap<>();
 
+    private static final List<Integer> EnchantProducts = new ArrayList<>();
+
     public static Integer[] getRuneIds(int runeId)
     {
         return RuneMap.getOrDefault(runeId, null);
@@ -20,6 +24,11 @@ public class RuneIds {
     public static int getIngredientId(int itemId)
     {
         return IngredientMap.getOrDefault(itemId, -1);
+    }
+
+    public static boolean isEnchantProduct(int itemId)
+    {
+        return EnchantProducts.contains(itemId);
     }
 
     public static Integer[] getItemIdsFromEquipment(int equipmentId)
@@ -188,6 +197,29 @@ public class RuneIds {
         IngredientMap.put(ItemID.DIAMOND_DRAGON_BOLTS, ItemID.DIAMOND_BOLTS);
         IngredientMap.put(ItemID.DRAGONSTONE_DRAGON_BOLTS, ItemID.DRAGONSTONE_BOLTS);
         IngredientMap.put(ItemID.ONYX_DRAGON_BOLTS, ItemID.ONYX_BOLTS);
+
+        // Products (Enchant Crossbow only)
+
+        EnchantProducts.add(ItemID.OPAL_BOLTS_E);
+        EnchantProducts.add(ItemID.JADE_BOLTS_E);
+        EnchantProducts.add(ItemID.PEARL_BOLTS_E);
+        EnchantProducts.add(ItemID.TOPAZ_BOLTS_E);
+        EnchantProducts.add(ItemID.SAPPHIRE_BOLTS_E);
+        EnchantProducts.add(ItemID.EMERALD_BOLTS_E);
+        EnchantProducts.add(ItemID.RUBY_BOLTS_E);
+        EnchantProducts.add(ItemID.DIAMOND_BOLTS_E);
+        EnchantProducts.add(ItemID.DRAGONSTONE_BOLTS_E);
+        EnchantProducts.add(ItemID.ONYX_BOLTS_E);
+        EnchantProducts.add(ItemID.OPAL_DRAGON_BOLTS_E);
+        EnchantProducts.add(ItemID.JADE_DRAGON_BOLTS_E);
+        EnchantProducts.add(ItemID.PEARL_DRAGON_BOLTS_E);
+        EnchantProducts.add(ItemID.TOPAZ_DRAGON_BOLTS_E);
+        EnchantProducts.add(ItemID.SAPPHIRE_DRAGON_BOLTS_E);
+        EnchantProducts.add(ItemID.EMERALD_DRAGON_BOLTS_E);
+        EnchantProducts.add(ItemID.RUBY_DRAGON_BOLTS_E);
+        EnchantProducts.add(ItemID.DIAMOND_DRAGON_BOLTS_E);
+        EnchantProducts.add(ItemID.DRAGONSTONE_DRAGON_BOLTS_E);
+        EnchantProducts.add(ItemID.ONYX_DRAGON_BOLTS_E);
 
     }
 

@@ -23,7 +23,7 @@ public class RemainingCastsPlugin extends Plugin
 	@Inject
 	private EventBus eventBus;
 	@Inject
-	private RuneCountTracker runeCountTracker;
+	private CastSuppliesTracker runeCountTracker;
 	@Inject
 	private RemainingCastTracker castTracker;
 	@Inject

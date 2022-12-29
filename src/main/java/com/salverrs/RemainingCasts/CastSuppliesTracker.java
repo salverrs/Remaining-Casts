@@ -1,8 +1,11 @@
 package com.salverrs.RemainingCasts;
 
+import com.salverrs.RemainingCasts.Events.BoltsEnchanted;
 import com.salverrs.RemainingCasts.Events.RunesChanged;
 import com.salverrs.RemainingCasts.Model.RuneChanges;
+import com.salverrs.RemainingCasts.Model.SpellInfo;
 import com.salverrs.RemainingCasts.Util.RuneIds;
+import com.salverrs.RemainingCasts.Util.SpellIds;
 import net.runelite.api.*;
 import net.runelite.api.events.ItemContainerChanged;
 import net.runelite.api.events.PostClientTick;
@@ -15,7 +18,7 @@ import javax.inject.Singleton;
 import java.util.*;
 
 @Singleton
-public class RuneCountTracker {
+public class CastSuppliesTracker {
 
     private static final int[] RUNE_POUCH_RUNE_VARBITS = {
             Varbits.RUNE_POUCH_RUNE1, Varbits.RUNE_POUCH_RUNE2, Varbits.RUNE_POUCH_RUNE3, Varbits.RUNE_POUCH_RUNE4
@@ -93,6 +96,10 @@ public class RuneCountTracker {
         {
             lastChanges = new RuneChanges(changes, runeCount, unlimitedRunes);
             eventBus.post(new RunesChanged(lastChanges));
+
+            final SpellInfo enchant = getEnchantSpellCast(changes);
+            if (enchant != null)
+                eventBus.post(new BoltsEnchanted(enchant, lastChanges));
         }
     }
 
@@ -113,7 +120,7 @@ public class RuneCountTracker {
         final Item[] equipmentItems = equipment != null ? equipment.getItems() : new Item[] {};
 
         Arrays.stream(inventoryItems).forEach(i -> updateInventoryItem(i.getId(), i.getQuantity()));
-        Arrays.stream(equipmentItems).forEach(i -> updateEquipmentItems(i.getId()));
+        Arrays.stream(equipmentItems).forEach(i -> updateEquipmentItems(i.getId(), i.getQuantity()));
     }
 
     private void updateInventoryItem(int itemId, int quantity)
@@ -142,10 +149,16 @@ public class RuneCountTracker {
         if (ingredient != -1)
             updateRuneCount(ingredient, quantity);
 
+        if (RuneIds.isEnchantProduct(itemId))
+            updateRuneCount(itemId, quantity);
+
     }
 
-    private void updateEquipmentItems(int itemId)
+    private void updateEquipmentItems(int itemId, int quantity)
     {
+        if (RuneIds.isEnchantProduct(itemId))
+            updateRuneCount(itemId, quantity);
+
         final Integer[] runes = RuneIds.getItemIdsFromEquipment(itemId);
         if (runes == null)
             return;
@@ -217,6 +230,20 @@ public class RuneCountTracker {
         }
 
         return changeMap;
+    }
+
+    private SpellInfo getEnchantSpellCast(Map<Integer, Integer> changes)
+    {
+        for (int itemId : changes.keySet())
+        {
+            final int change = changes.get(itemId);
+            final SpellInfo enchant = SpellIds.getSpellByProduct(itemId, change);
+
+            if (enchant != null)
+                return enchant;
+        }
+
+        return null;
     }
 
     private void resetRuneCount()

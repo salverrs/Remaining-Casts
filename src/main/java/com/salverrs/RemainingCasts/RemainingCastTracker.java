@@ -1,5 +1,6 @@
 package com.salverrs.RemainingCasts;
 
+import com.salverrs.RemainingCasts.Events.BoltsEnchanted;
 import com.salverrs.RemainingCasts.Events.RunesChanged;
 import com.salverrs.RemainingCasts.Infobox.RemainingCastsInfoBox;
 import com.salverrs.RemainingCasts.Model.RuneChanges;
@@ -42,7 +43,7 @@ public class RemainingCastTracker {
     @Inject
     private Client client;
     @Inject
-    private RuneCountTracker runeCountTracker;
+    private CastSuppliesTracker runeCountTracker;
     @Inject
     private SpriteManager spriteManager;
     @Inject
@@ -77,6 +78,27 @@ public class RemainingCastTracker {
             return;
 
         processCast(spellInfo);
+    }
+
+    @Subscribe
+    public void onBoltsEnchanted(BoltsEnchanted event)
+    {
+        if (!active || !config.enableInfoboxes())
+            return;
+
+        final RuneChanges changes = event.getChanges();
+        SpellInfo enchant = event.getEnchantSpell();
+
+        if (!matchesSpellInfo(enchant, changes) || otherItemContainerOpen)
+            enchant = null;
+
+        runeCount = changes.getCurrentRunes();
+        updateCastBoxes(enchant);
+
+        if (enchant == null || isFiltered(enchant))
+            return;
+
+        processCast(enchant);
     }
 
     @Subscribe

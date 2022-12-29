@@ -2,6 +2,7 @@ package com.salverrs.RemainingCasts.Util;
 
 import com.salverrs.RemainingCasts.Model.SpellCost;
 import com.salverrs.RemainingCasts.Model.SpellInfo;
+import com.salverrs.RemainingCasts.Model.SpellProduct;
 import net.runelite.api.ItemID;
 import net.runelite.api.SpriteID;
 
@@ -13,9 +14,9 @@ import java.util.Map;
 public class SpellIds {
 
     private static final List<SpellInfo> Spells = new ArrayList<>();
+    private static final Map<SpellProduct, SpellInfo> SpellProductMap = new HashMap<>();
     private static final Map<String, SpellInfo> SpellNameMap = new HashMap<>();
     private static final Map<Integer, SpellInfo> SpellSpriteMap = new HashMap<>();
-
 
     public static List<SpellInfo> getAllSpells()
     {
@@ -29,6 +30,10 @@ public class SpellIds {
     {
         return SpellNameMap.getOrDefault(spellName, null);
     }
+    public static SpellInfo getSpellByProduct(int itemId, int quantity)
+    {
+        return SpellProductMap.getOrDefault(new SpellProduct(itemId, quantity), null);
+    }
 
     static
     {
@@ -37,16 +42,28 @@ public class SpellIds {
         // Lumbridge Home Teleport
         Spells.add(new SpellInfo("Wind Strike", SpriteID.SPELL_WIND_STRIKE, new SpellCost(new int[] {ItemID.MIND_RUNE, ItemID.AIR_RUNE}, new int[] {1, 1})));
         Spells.add(new SpellInfo("Confuse", SpriteID.SPELL_CONFUSE, new SpellCost(new int[] {ItemID.BODY_RUNE, ItemID.WATER_RUNE, ItemID.EARTH_RUNE}, new int[] {1, 3, 2})));
-        Spells.add(new SpellInfo("Enchant Crossbow Bolt (Opal)", SpriteID.SPELL_ENCHANT_CROSSBOW_BOLT, new SpellCost(new int[] {ItemID.AIR_RUNE, ItemID.COSMIC_RUNE, ItemID.OPAL_BOLTS}, new int[] {2, 1, 10})));
-        Spells.add(new SpellInfo("Enchant Crossbow Bolt (Sapphire)", SpriteID.SPELL_ENCHANT_CROSSBOW_BOLT, new SpellCost(new int[] {ItemID.WATER_RUNE, ItemID.COSMIC_RUNE, ItemID.MIND_RUNE, ItemID.SAPPHIRE_BOLTS}, new int[] {1, 1, 1, 10})));
-        Spells.add(new SpellInfo("Enchant Crossbow Bolt (Jade)", SpriteID.SPELL_ENCHANT_CROSSBOW_BOLT, new SpellCost(new int[] {ItemID.EARTH_RUNE, ItemID.COSMIC_RUNE, ItemID.JADE_BOLTS}, new int[] {2, 1, 10})));
-        Spells.add(new SpellInfo("Enchant Crossbow Bolt (Pearl)", SpriteID.SPELL_ENCHANT_CROSSBOW_BOLT, new SpellCost(new int[] {ItemID.WATER_RUNE, ItemID.COSMIC_RUNE, ItemID.PEARL_BOLTS}, new int[] {2, 1, 10})));
-        Spells.add(new SpellInfo("Enchant Crossbow Bolt (Emerald)", SpriteID.SPELL_ENCHANT_CROSSBOW_BOLT, new SpellCost(new int[] {ItemID.AIR_RUNE, ItemID.COSMIC_RUNE, ItemID.NATURE_RUNE, ItemID.EMERALD_BOLTS}, new int[] {3, 1, 1, 10})));
-        Spells.add(new SpellInfo("Enchant Crossbow Bolt (Red Topaz)", SpriteID.SPELL_ENCHANT_CROSSBOW_BOLT, new SpellCost(new int[] {ItemID.FIRE_RUNE, ItemID.COSMIC_RUNE, ItemID.TOPAZ_BOLTS}, new int[] {2, 1, 10})));
-        Spells.add(new SpellInfo("Enchant Crossbow Bolt (Ruby)", SpriteID.SPELL_ENCHANT_CROSSBOW_BOLT, new SpellCost(new int[] {ItemID.FIRE_RUNE, ItemID.BLOOD_RUNE, ItemID.COSMIC_RUNE, ItemID.RUBY_BOLTS}, new int[] {5, 1, 1, 10})));
-        Spells.add(new SpellInfo("Enchant Crossbow Bolt (Diamond)", SpriteID.SPELL_ENCHANT_CROSSBOW_BOLT, new SpellCost(new int[] {ItemID.EARTH_RUNE, ItemID.COSMIC_RUNE, ItemID.LAW_RUNE, ItemID.DIAMOND_BOLTS}, new int[] {10, 1, 2, 10})));
-        Spells.add(new SpellInfo("Enchant Crossbow Bolt (Dragonstone)", SpriteID.SPELL_ENCHANT_CROSSBOW_BOLT, new SpellCost(new int[] {ItemID.EARTH_RUNE, ItemID.COSMIC_RUNE, ItemID.SOUL_RUNE, ItemID.DRAGONSTONE_BOLTS}, new int[] {15, 1, 1, 10})));
-        Spells.add(new SpellInfo("Enchant Crossbow Bolt (Onyx)", SpriteID.SPELL_ENCHANT_CROSSBOW_BOLT, new SpellCost(new int[] {ItemID.FIRE_RUNE, ItemID.COSMIC_RUNE, ItemID.DEATH_RUNE, ItemID.ONYX_BOLTS}, new int[] {20, 1, 1, 10})));
+
+        Spells.add(new SpellInfo("Enchant Crossbow Bolt (Opal)", SpriteID.SPELL_ENCHANT_CROSSBOW_BOLT, new SpellCost(new int[] {ItemID.AIR_RUNE, ItemID.COSMIC_RUNE, ItemID.OPAL_BOLTS}, new int[] {2, 1, 10}),
+                new SpellProduct(ItemID.OPAL_BOLTS_E, 10), new SpellProduct(ItemID.OPAL_DRAGON_BOLTS_E, 10)));
+        Spells.add(new SpellInfo("Enchant Crossbow Bolt (Sapphire)", SpriteID.SPELL_ENCHANT_CROSSBOW_BOLT, new SpellCost(new int[] {ItemID.WATER_RUNE, ItemID.COSMIC_RUNE, ItemID.MIND_RUNE, ItemID.SAPPHIRE_BOLTS}, new int[] {1, 1, 1, 10}),
+                new SpellProduct(ItemID.SAPPHIRE_BOLTS_E, 10), new SpellProduct(ItemID.SAPPHIRE_DRAGON_BOLTS_E, 10)));
+        Spells.add(new SpellInfo("Enchant Crossbow Bolt (Jade)", SpriteID.SPELL_ENCHANT_CROSSBOW_BOLT, new SpellCost(new int[] {ItemID.EARTH_RUNE, ItemID.COSMIC_RUNE, ItemID.JADE_BOLTS}, new int[] {2, 1, 10}),
+                new SpellProduct(ItemID.JADE_BOLTS_E, 10), new SpellProduct(ItemID.JADE_DRAGON_BOLTS_E, 10)));
+        Spells.add(new SpellInfo("Enchant Crossbow Bolt (Pearl)", SpriteID.SPELL_ENCHANT_CROSSBOW_BOLT, new SpellCost(new int[] {ItemID.WATER_RUNE, ItemID.COSMIC_RUNE, ItemID.PEARL_BOLTS}, new int[] {2, 1, 10}),
+                new SpellProduct(ItemID.PEARL_BOLTS_E, 10), new SpellProduct(ItemID.PEARL_DRAGON_BOLTS_E, 10)));
+        Spells.add(new SpellInfo("Enchant Crossbow Bolt (Emerald)", SpriteID.SPELL_ENCHANT_CROSSBOW_BOLT, new SpellCost(new int[] {ItemID.AIR_RUNE, ItemID.COSMIC_RUNE, ItemID.NATURE_RUNE, ItemID.EMERALD_BOLTS}, new int[] {3, 1, 1, 10}),
+                new SpellProduct(ItemID.EMERALD_BOLTS_E, 10), new SpellProduct(ItemID.EMERALD_DRAGON_BOLTS_E, 10)));
+        Spells.add(new SpellInfo("Enchant Crossbow Bolt (Red Topaz)", SpriteID.SPELL_ENCHANT_CROSSBOW_BOLT, new SpellCost(new int[] {ItemID.FIRE_RUNE, ItemID.COSMIC_RUNE, ItemID.TOPAZ_BOLTS}, new int[] {2, 1, 10}),
+                new SpellProduct(ItemID.TOPAZ_BOLTS_E, 10), new SpellProduct(ItemID.TOPAZ_DRAGON_BOLTS_E, 10)));
+        Spells.add(new SpellInfo("Enchant Crossbow Bolt (Ruby)", SpriteID.SPELL_ENCHANT_CROSSBOW_BOLT, new SpellCost(new int[] {ItemID.FIRE_RUNE, ItemID.BLOOD_RUNE, ItemID.COSMIC_RUNE, ItemID.RUBY_BOLTS}, new int[] {5, 1, 1, 10}),
+                new SpellProduct(ItemID.RUBY_BOLTS_E, 10), new SpellProduct(ItemID.RUBY_DRAGON_BOLTS_E, 10)));
+        Spells.add(new SpellInfo("Enchant Crossbow Bolt (Diamond)", SpriteID.SPELL_ENCHANT_CROSSBOW_BOLT, new SpellCost(new int[] {ItemID.EARTH_RUNE, ItemID.COSMIC_RUNE, ItemID.LAW_RUNE, ItemID.DIAMOND_BOLTS}, new int[] {10, 1, 2, 10}),
+                new SpellProduct(ItemID.DIAMOND_BOLTS_E, 10), new SpellProduct(ItemID.DIAMOND_DRAGON_BOLTS_E, 10)));
+        Spells.add(new SpellInfo("Enchant Crossbow Bolt (Dragonstone)", SpriteID.SPELL_ENCHANT_CROSSBOW_BOLT, new SpellCost(new int[] {ItemID.EARTH_RUNE, ItemID.COSMIC_RUNE, ItemID.SOUL_RUNE, ItemID.DRAGONSTONE_BOLTS}, new int[] {15, 1, 1, 10}),
+                new SpellProduct(ItemID.DRAGONSTONE_BOLTS_E, 10), new SpellProduct(ItemID.DRAGONSTONE_DRAGON_BOLTS_E, 10)));
+        Spells.add(new SpellInfo("Enchant Crossbow Bolt (Onyx)", SpriteID.SPELL_ENCHANT_CROSSBOW_BOLT, new SpellCost(new int[] {ItemID.FIRE_RUNE, ItemID.COSMIC_RUNE, ItemID.DEATH_RUNE, ItemID.ONYX_BOLTS}, new int[] {20, 1, 1, 10}),
+                new SpellProduct(ItemID.ONYX_BOLTS_E, 10), new SpellProduct(ItemID.ONYX_DRAGON_BOLTS_E, 10)));
+
         Spells.add(new SpellInfo("Water Strike", SpriteID.SPELL_WATER_STRIKE, new SpellCost(new int[] {ItemID.MIND_RUNE, ItemID.WATER_RUNE, ItemID.AIR_RUNE}, new int[] {1, 1, 1})));
         Spells.add(new SpellInfo("Lvl-1 Enchant", SpriteID.SPELL_LVL_1_ENCHANT, new SpellCost(new int[] {ItemID.COSMIC_RUNE, ItemID.WATER_RUNE}, new int[] {1, 1})));
         Spells.add(new SpellInfo("Earth Strike", SpriteID.SPELL_EARTH_STRIKE, new SpellCost(new int[] {ItemID.MIND_RUNE, ItemID.EARTH_RUNE, ItemID.AIR_RUNE}, new int[] {1, 2, 1})));
@@ -238,10 +255,11 @@ public class SpellIds {
         Spells.add(new SpellInfo("Ape Atoll Teleport", SpriteID.SPELL_APE_ATOLL_TELEPORT, new SpellCost(new int[] {ItemID.LAW_RUNE, ItemID.SOUL_RUNE, ItemID.BLOOD_RUNE}, new int[] {2, 2, 2})));
         Spells.add(new SpellInfo("Sinister Offering", SpriteID.SPELL_SINISTER_OFFERING, new SpellCost(new int[] {ItemID.BLOOD_RUNE, ItemID.WRATH_RUNE}, new int[] {1, 1})));
 
-
         // Some keys do collide (some spells name/sprite) - no longer bothering to map through cost because unlimited rune supply complicates things.
         // We remove existing sprite keys and ignore them because we don't want the first occurrence mapped if it's not unique.
         // Don't need to remove/ignore keys from name map, because we only use that for tooltips and the rune costs are the same regardless (as of writing, only Teleport to Target is shared).
+
+        // SpellProductMap currently only used for detecting Enchant crossbow bolts.
 
         final List<Integer> spriteIgnore = new ArrayList<Integer>();
 
@@ -249,6 +267,13 @@ public class SpellIds {
             final SpellCost cost = s.getSpellCost();
             final int spriteId = s.getSpriteId();
             final String name = s.getName();
+
+            if (s.getSpellProducts() != null)
+            {
+                final SpellProduct[] products = s.getSpellProducts();
+                for (SpellProduct p : products)
+                    SpellProductMap.put(p, s);
+            }
 
             if (!spriteIgnore.contains(spriteId))
             {
