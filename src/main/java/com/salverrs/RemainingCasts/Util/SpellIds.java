@@ -72,9 +72,9 @@ public class SpellIds {
         Spells.add(new SpellInfo("Camelot Teleport", SpriteID.SPELL_CAMELOT_TELEPORT, new SpellCost(new int[] {ItemID.LAW_RUNE, ItemID.AIR_RUNE}, new int[] {1, 5})));
         Spells.add(new SpellInfo("Water Blast", SpriteID.SPELL_WATER_BLAST, new SpellCost(new int[] {ItemID.DEATH_RUNE, ItemID.WATER_RUNE, ItemID.AIR_RUNE}, new int[] {1, 3, 3})));
         Spells.add(new SpellInfo("Lvl-3 Enchant", SpriteID.SPELL_LVL_3_ENCHANT, new SpellCost(new int[] {ItemID.COSMIC_RUNE, ItemID.FIRE_RUNE}, new int[] {1, 5})));
-        Spells.add(new SpellInfo("Iban Blast", SpriteID.SPELL_IBAN_BLAST, new SpellCost(new int[] {/*ItemID.IBANS_STAFF,*/ ItemID.DEATH_RUNE, ItemID.FIRE_RUNE}, new int[] {/*1,*/ 1, 5})));
+        Spells.add(new SpellInfo("Iban Blast", SpriteID.SPELL_IBAN_BLAST, new SpellCost(new int[] {ItemID.IBANS_STAFF, ItemID.DEATH_RUNE, ItemID.FIRE_RUNE}, new int[] {1, 1, 5})));
         Spells.add(new SpellInfo("Snare", SpriteID.SPELL_SNARE, new SpellCost(new int[] {ItemID.NATURE_RUNE, ItemID.WATER_RUNE, ItemID.EARTH_RUNE}, new int[] {3, 4, 4})));
-        Spells.add(new SpellInfo("Magic Dart", SpriteID.SPELL_MAGIC_DART, new SpellCost(new int[] {/*ItemID.SLAYERS_STAFF,*/ ItemID.DEATH_RUNE, ItemID.MIND_RUNE}, new int[] {/*1,*/ 1, 4})));
+        Spells.add(new SpellInfo("Magic Dart", SpriteID.SPELL_MAGIC_DART, new SpellCost(new int[] {ItemID.SLAYERS_STAFF, ItemID.DEATH_RUNE, ItemID.MIND_RUNE}, new int[] {1, 1, 4})));
         Spells.add(new SpellInfo("Ardougne Teleport", SpriteID.SPELL_ARDOUGNE_TELEPORT, new SpellCost(new int[] {ItemID.LAW_RUNE, ItemID.WATER_RUNE}, new int[] {2, 2})));
         Spells.add(new SpellInfo("Earth Blast", SpriteID.SPELL_EARTH_BLAST, new SpellCost(new int[] {ItemID.DEATH_RUNE, ItemID.EARTH_RUNE, ItemID.AIR_RUNE}, new int[] {1, 4, 3})));
         Spells.add(new SpellInfo("High Level Alchemy", SpriteID.SPELL_HIGH_LEVEL_ALCHEMY, new SpellCost(new int[] {ItemID.NATURE_RUNE, ItemID.FIRE_RUNE}, new int[] {1, 5})));
@@ -84,9 +84,9 @@ public class SpellIds {
         Spells.add(new SpellInfo("Fire Blast", SpriteID.SPELL_FIRE_BLAST, new SpellCost(new int[] {ItemID.DEATH_RUNE, ItemID.FIRE_RUNE, ItemID.AIR_RUNE}, new int[] {1, 5, 4})));
         Spells.add(new SpellInfo("Charge Earth Orb", SpriteID.SPELL_CHARGE_EARTH_ORB, new SpellCost(new int[] {ItemID.COSMIC_RUNE, ItemID.EARTH_RUNE, ItemID.UNPOWERED_ORB}, new int[] {3, 30, 1})));
         Spells.add(new SpellInfo("Bones to Peaches", SpriteID.SPELL_BONES_TO_PEACHES, new SpellCost(new int[] {ItemID.NATURE_RUNE, ItemID.WATER_RUNE, ItemID.EARTH_RUNE}, new int[] {2, 4, 4})));
-        Spells.add(new SpellInfo("Saradomin Strike", SpriteID.SPELL_SARADOMIN_STRIKE, new SpellCost(new int[] {/*ItemID.SARADOMIN_STAFF,*/ ItemID.BLOOD_RUNE, ItemID.AIR_RUNE, ItemID.FIRE_RUNE}, new int[] {/*1,*/ 2, 4, 2})));
-        Spells.add(new SpellInfo("Claws of Guthix", SpriteID.SPELL_CLAWS_OF_GUTHIX, new SpellCost(new int[] {/*ItemID.GUTHIX_STAFF,*/ ItemID.BLOOD_RUNE, ItemID.AIR_RUNE, ItemID.FIRE_RUNE}, new int[] {/*1,*/ 2, 4, 1})));
-        Spells.add(new SpellInfo("Flames of Zamorak", SpriteID.SPELL_FLAMES_OF_ZAMORAK, new SpellCost(new int[] {/*ItemID.ZAMORAK_STAFF,*/ ItemID.BLOOD_RUNE, ItemID.AIR_RUNE, ItemID.FIRE_RUNE}, new int[] {/*1,*/ 2, 1, 4})));
+        Spells.add(new SpellInfo("Saradomin Strike", SpriteID.SPELL_SARADOMIN_STRIKE, new SpellCost(new int[] {ItemID.SARADOMIN_STAFF, ItemID.BLOOD_RUNE, ItemID.AIR_RUNE, ItemID.FIRE_RUNE}, new int[] {1, 2, 4, 2})));
+        Spells.add(new SpellInfo("Claws of Guthix", SpriteID.SPELL_CLAWS_OF_GUTHIX, new SpellCost(new int[] {ItemID.GUTHIX_STAFF, ItemID.BLOOD_RUNE, ItemID.AIR_RUNE, ItemID.FIRE_RUNE}, new int[] {1, 2, 4, 1})));
+        Spells.add(new SpellInfo("Flames of Zamorak", SpriteID.SPELL_FLAMES_OF_ZAMORAK, new SpellCost(new int[] {ItemID.ZAMORAK_STAFF, ItemID.BLOOD_RUNE, ItemID.AIR_RUNE, ItemID.FIRE_RUNE}, new int[] {1, 2, 1, 4})));
         Spells.add(new SpellInfo("Trollheim Teleport", SpriteID.SPELL_TROLLHEIM_TELEPORT, new SpellCost(new int[] {ItemID.LAW_RUNE, ItemID.FIRE_RUNE}, new int[] {2, 2})));
         Spells.add(new SpellInfo("Wind Wave", SpriteID.SPELL_WIND_WAVE, new SpellCost(new int[] {ItemID.BLOOD_RUNE, ItemID.AIR_RUNE}, new int[] {1, 5})));
         Spells.add(new SpellInfo("Charge Fire Orb", SpriteID.SPELL_CHARGE_FIRE_ORB, new SpellCost(new int[] {ItemID.COSMIC_RUNE, ItemID.FIRE_RUNE, ItemID.UNPOWERED_ORB}, new int[] {3, 30, 1})));
