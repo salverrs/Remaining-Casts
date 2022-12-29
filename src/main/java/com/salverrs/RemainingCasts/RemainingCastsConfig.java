@@ -164,7 +164,7 @@ public interface RemainingCastsConfig extends Config
 	@ConfigItem(
 			keyName = "enableChatWarnings",
 			name = "Enable chat warnings",
-			description = "Enable chat warnings when remaining casts drops below a predefined amount.",
+			description = "Enable chat warnings when remaining casts reach a predefined amount.",
 			section = warningsSection,
 			position = 11
 	)
@@ -172,20 +172,20 @@ public interface RemainingCastsConfig extends Config
 
 	@ConfigItem(
 			keyName = "chatWarningNotification",
-			name = "Enable Notifications",
-			description = "Enable Runelite notification alongside chat warning.",
+			name = "Enable notifications",
+			description = "Enable Runelite notification alongside the chat warning.",
 			section = warningsSection,
 			position = 12
 	)
 	default boolean useChatWarningNotifications()
 	{
-		return false;
+		return true;
 	}
 
 	@ConfigItem(
 			keyName = "chatWarningThresholds",
 			name = "Chat warning thresholds",
-			description = "The amounts at which a chat warning will be displayed.",
+			description = "The amounts at which a chat warning will be triggered.",
 			section = warningsSection,
 			position = 13
 	)

@@ -21,7 +21,8 @@ import java.util.*;
 @Singleton
 public class TooltipCastUpdater {
 
-    private int tooltipWidgetId = -1;
+    private int mageBookTooltipWidgetId = -1;
+    private int autocastTooltipWidgetId = -1;
     private boolean active = false;
 
     @Inject
@@ -49,42 +50,71 @@ public class TooltipCastUpdater {
             return;
 
         final List<MenuEntry> entries = new ArrayList<>(Arrays.asList(client.getMenuEntries()));
+        boolean appendToOption = false;
+
         for (MenuEntry entry : entries)
         {
             final Widget widget = entry.getWidget();
             if (widget == null)
                 continue;
 
-            final String spellName = Text.removeFormattingTags(widget.getName());
-            final SpellInfo spellInfo = SpellIds.getSpellByName(spellName);
+            String spellName = Text.removeFormattingTags(widget.getName()); // Standard spell book interface
+            SpellInfo spellInfo = SpellIds.getSpellByName(spellName);
 
-            if (spellInfo != null)
+            if (spellInfo == null) // Autocast fallback
+            {
+                spellName = Text.removeFormattingTags(entry.getOption()); // Autocast menu uses option only
+                spellInfo = SpellIds.getSpellByName(spellName);
+                appendToOption = true;
+            }
+
+            if (spellInfo == null)
+                return;
+
+            final Map<Integer, Integer> runeCount = runeCountTracker.getLastRuneCount();
+            final int numCasts = spellInfo.getSpellCost().getRemainingCasts(runeCount);
+            final String casts = "(" + getRemainingCastsString(numCasts) + ")";
+
+            if (appendToOption)
+            {
+                final String option = entry.getOption();
+                if (option.endsWith(casts))
+                    continue;
+
+                entry.setOption(option + " " + casts);
+            }
+            else
             {
                 final String target = entry.getTarget();
-                final Map<Integer, Integer> runeCount = runeCountTracker.getLastRuneCount();
-                final int numCasts = spellInfo.getSpellCost().getRemainingCasts(runeCount);
-                final String casts = "(" + getRemainingCastsString(numCasts) + ")";
-
                 if (target.endsWith(casts))
                     continue;
 
                 entry.setTarget(target + " " + casts);
-                continue;
             }
+
         }
     }
 
     @Subscribe
     public void onScriptPreFired(ScriptPreFired event)
     {
-        if (!active || !config.enableSpellTooltip() || event.getScriptId() != 2622)
+        if (!active || !config.enableSpellTooltip())
             return;
 
-        final int tooltipWidgetArgIndex = 5;
+        final boolean isMageBookTooltip = event.getScriptId() == 2622; // main spell tool tip
+        final boolean isAutocastTooltip = event.getScriptId() == 238; // auto cast tooltip
+
+        if (!isMageBookTooltip && !isAutocastTooltip)
+            return;
+
         final ScriptEvent scriptEvent = event.getScriptEvent();
         final Object[] args = scriptEvent.getArguments();
+        final int tooltipWidgetArgIndex = isMageBookTooltip ? 5 : 1;
 
-        tooltipWidgetId = (int)args[tooltipWidgetArgIndex];
+        if (isMageBookTooltip)
+            mageBookTooltipWidgetId = (int)args[tooltipWidgetArgIndex];
+        else if (isAutocastTooltip)
+            autocastTooltipWidgetId = (int)args[tooltipWidgetArgIndex];
     }
 
     @Subscribe
@@ -93,12 +123,15 @@ public class TooltipCastUpdater {
         if (!active || !config.enableSpellTooltip())
             return;
 
-        if (event.getScriptId() != 2622 || tooltipWidgetId == -1)
+        final int scriptId = event.getScriptId();
+        if (scriptId != 2622 && scriptId != 238)
             return;
+
+        final int widgetId = scriptId == 2622 ? mageBookTooltipWidgetId : autocastTooltipWidgetId;
 
         clientThread.invoke(() ->
         {
-            Widget widget = client.getWidget(tooltipWidgetId);
+            Widget widget = client.getWidget(widgetId);
             if (widget == null)
                 return;
 
@@ -126,6 +159,7 @@ public class TooltipCastUpdater {
 
             spellTitle.setText(newText);
         });
+
     }
 
 

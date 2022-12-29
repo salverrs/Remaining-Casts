@@ -28,7 +28,7 @@ public class SpellIds {
     }
     public static SpellInfo getSpellByName(String spellName)
     {
-        return SpellNameMap.getOrDefault(spellName, null);
+        return SpellNameMap.getOrDefault(spellName.toLowerCase(), null);
     }
     public static SpellInfo getSpellByProduct(int itemId, int quantity)
     {
@@ -289,7 +289,7 @@ public class SpellIds {
             }
 
                 if (!SpellNameMap.containsKey(name))
-                    SpellNameMap.put(name, s);
+                    SpellNameMap.put(name.toLowerCase(), s);
         });
     }
 }

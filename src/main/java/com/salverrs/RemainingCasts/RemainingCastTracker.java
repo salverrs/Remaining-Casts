@@ -147,7 +147,7 @@ public class RemainingCastTracker {
         if (!active || initUpdate)
             return;
 
-        runeCount = suppliesTracker.forceUpdateRuneCount();
+        runeCount = suppliesTracker.forceUpdateRuneCount(); // Force initial rune count update
         updatePinnedSpells();
         updateCastBoxes(null);
         initUpdate = true;
@@ -356,12 +356,13 @@ public class RemainingCastTracker {
         final String pinned = config.pinnedSpells();
         final List<String> spellNames = Text.fromCSV(pinned);
 
-        if (spellNames.size() == 0)
-            return;
-
         clientThread.invoke(() ->
         {
             castBoxes.values().forEach(cb -> cb.setPinned(false));
+
+            if (spellNames.size() == 0)
+                return;
+
             spellNames.forEach(name ->
             {
                 final SpellInfo info = SpellIds.getSpellByName(name);
