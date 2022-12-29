@@ -22,7 +22,7 @@ public interface RemainingCastsConfig extends Config
 
 	@ConfigSection(
 			name = "Chat warnings",
-			description = "Options relating to remaining casts chat warnings.",
+			description = "Options relating to remaining casts chat warnings",
 			position = 2
 	)
 	String warningsSection = "warnings";
@@ -79,7 +79,7 @@ public interface RemainingCastsConfig extends Config
 	@ConfigItem(
 			keyName = "infoBoxExpirySeconds",
 			name = "Infobox expiry",
-			description = "The number of seconds until an infobox will expire. 0 represents no expiry",
+			description = "The number of seconds until an infobox will expire - 0 represents no expiry",
 			section = infoboxSection,
 			position = 4
 	)
@@ -92,7 +92,7 @@ public interface RemainingCastsConfig extends Config
 	@ConfigItem(
 			keyName = "infoBoxSpellLimit",
 			name = "Maximum spells",
-			description = "The maximum number of spells to track remaining casts for. 0 represents no limit",
+			description = "The maximum number of spells to track remaining casts for - 0 represents no limit",
 			section = infoboxSection,
 			position = 5
 	)
@@ -104,7 +104,7 @@ public interface RemainingCastsConfig extends Config
 	@ConfigItem(
 			keyName = "infoBoxThreshold",
 			name = "Cast threshold",
-			description = "Only show when casts remaining is less than the threshold. 0 represents no threshold.",
+			description = "Only show when casts remaining is less than the threshold - 0 represents no threshold",
 			section = infoboxSection,
 			position = 6
 	)
@@ -116,7 +116,7 @@ public interface RemainingCastsConfig extends Config
 	@ConfigItem(
 			keyName = "showInfoBoxSprites",
 			name = "Show spell sprites",
-			description = "Show the sprite image for the spell on the infobox. If disabled, the current spell book sprite will be used instead",
+			description = "Show the sprite image for the spell on the infobox",
 			section = infoboxSection,
 			position = 7
 	)
@@ -152,7 +152,7 @@ public interface RemainingCastsConfig extends Config
 	@ConfigItem(
 			keyName = "pinnedSpells",
 			name = "Pinned spells",
-			description = "These spells will always display an infobox that will never expire.",
+			description = "The names of the spells that should always display an infobox which never expires",
 			section = infoboxSection,
 			position = 10
 	)
@@ -164,7 +164,7 @@ public interface RemainingCastsConfig extends Config
 	@ConfigItem(
 			keyName = "enableChatWarnings",
 			name = "Enable chat warnings",
-			description = "Enable chat warnings when remaining casts reach a predefined amount.",
+			description = "Enable chat warnings when remaining casts reach a predefined amount",
 			section = warningsSection,
 			position = 11
 	)
@@ -173,7 +173,7 @@ public interface RemainingCastsConfig extends Config
 	@ConfigItem(
 			keyName = "chatWarningNotification",
 			name = "Enable notifications",
-			description = "Enable Runelite notification alongside the chat warning.",
+			description = "Enable Runelite notification alongside the chat warning",
 			section = warningsSection,
 			position = 12
 	)
@@ -185,7 +185,7 @@ public interface RemainingCastsConfig extends Config
 	@ConfigItem(
 			keyName = "chatWarningThresholds",
 			name = "Chat warning thresholds",
-			description = "The amounts at which a chat warning will be triggered.",
+			description = "The cast amounts at which a chat warning will be triggered",
 			section = warningsSection,
 			position = 13
 	)
