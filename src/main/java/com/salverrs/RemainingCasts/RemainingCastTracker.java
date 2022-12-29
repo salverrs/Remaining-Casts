@@ -63,7 +63,7 @@ public class RemainingCastTracker {
     @Subscribe
     public void onClientTick(ClientTick tick)
     {
-        if (!active || !config.enableInfoboxes())
+        if (!active)
             return;
 
         checkCastBoxExpiry();
@@ -72,7 +72,7 @@ public class RemainingCastTracker {
     @Subscribe
     public void onRunesChanged(RunesChanged event)
     {
-        if (!active || !config.enableInfoboxes())
+        if (!active || (!config.enableInfoboxes() && !config.useChatWarnings()))
             return;
 
         final RuneChanges changes = event.getChanges();
@@ -82,10 +82,14 @@ public class RemainingCastTracker {
             spellInfo = null;
 
         runeCount = changes.getCurrentRunes();
-        updateCastBoxes(spellInfo);
-        updateWarnings(spellInfo);
 
-        if (spellInfo == null || isFiltered(spellInfo))
+        if (config.enableInfoboxes())
+            updateCastBoxes(spellInfo);
+
+        if (config.useChatWarnings())
+            updateWarnings(spellInfo);
+
+        if (!config.enableInfoboxes() || spellInfo == null || isFiltered(spellInfo))
             return;
 
         processCast(spellInfo);
@@ -94,7 +98,7 @@ public class RemainingCastTracker {
     @Subscribe
     public void onBoltsEnchanted(BoltsEnchanted event)
     {
-        if (!active || !config.enableInfoboxes())
+        if (!active || (!config.enableInfoboxes() && !config.useChatWarnings()))
             return;
 
         final RuneChanges changes = event.getChanges();
@@ -104,10 +108,14 @@ public class RemainingCastTracker {
             enchant = null;
 
         runeCount = changes.getCurrentRunes();
-        updateCastBoxes(enchant);
-        updateWarnings(enchant);
 
-        if (enchant == null || isFiltered(enchant))
+        if (config.enableInfoboxes())
+            updateCastBoxes(enchant);
+
+        if (config.useChatWarnings())
+            updateWarnings(enchant);
+
+        if (!config.enableInfoboxes() || enchant == null || isFiltered(enchant))
             return;
 
         processCast(enchant);
@@ -116,7 +124,7 @@ public class RemainingCastTracker {
     @Subscribe
     public void onMenuOptionClicked(MenuOptionClicked event)
     {
-        if (!active || !config.enableInfoboxes())
+        if (!active)
             return;
 
         final MenuEntry entry = event.getMenuEntry();
@@ -147,8 +155,13 @@ public class RemainingCastTracker {
             return;
 
         runeCount = suppliesTracker.forceUpdateRuneCount(); // Force initial rune count update
-        updatePinnedSpells();
-        updateCastBoxes(null);
+
+        if (config.enableInfoboxes())
+        {
+            updatePinnedSpells();
+            updateCastBoxes(null);
+        }
+
         initUpdate = true;
     }
 
@@ -178,14 +191,25 @@ public class RemainingCastTracker {
         if (!configChanged.getGroup().equals(RemainingCastsPlugin.CONFIG_GROUP))
             return;
 
-        updatePinnedSpells();
+        if (configChanged.getKey().equals("enableInfoboxes"))
+        {
+            stop();
+            start(plugin);
+        }
+        else
+        {
+            if (config.enableInfoboxes())
+                updatePinnedSpells();
+        }
     }
 
     public void start(Plugin plugin)
     {
         active = true;
         this.plugin = plugin;
-        updatePinnedSpells();
+
+        if (config.enableInfoboxes())
+            updatePinnedSpells();
     }
 
     public void stop()
@@ -232,7 +256,7 @@ public class RemainingCastTracker {
 
     private void updateWarnings(SpellInfo recentCast)
     {
-        if (!config.useChatWarnings() || recentCast == null)
+        if (recentCast == null)
             return;
 
         final List<Integer> thresholds = new ArrayList<>();
@@ -270,7 +294,6 @@ public class RemainingCastTracker {
         }
 
     }
-
 
     private void updateCastBoxes(SpellInfo recentCast)
     {
