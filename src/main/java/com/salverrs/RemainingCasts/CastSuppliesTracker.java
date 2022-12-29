@@ -79,6 +79,12 @@ public class CastSuppliesTracker {
         active = false;
     }
 
+    public Map<Integer, Integer> forceUpdateRuneCount()
+    {
+        updateRuneCount();
+        return runeCount;
+    }
+
     public Map<Integer, Integer> getLastRuneCount()
     {
         return runeCount;

@@ -4,6 +4,7 @@ import com.salverrs.RemainingCasts.Model.SpellCost;
 import com.salverrs.RemainingCasts.Model.SpellInfo;
 import com.salverrs.RemainingCasts.Util.CastUtils;
 import lombok.Getter;
+import lombok.Setter;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.ui.overlay.infobox.InfoBox;
 
@@ -21,7 +22,10 @@ public class RemainingCastsInfoBox extends InfoBox
     private long lastUpdated;
     private boolean shouldShorten;
 
-    public RemainingCastsInfoBox(SpellInfo spellInfo, Map<Integer, Integer> runeCount, BufferedImage image, boolean shorten, Plugin plugin)
+    @Setter
+    private boolean isPinned;
+
+    public RemainingCastsInfoBox(SpellInfo spellInfo, Map<Integer, Integer> runeCount, BufferedImage image, boolean shorten, boolean isPinned, Plugin plugin)
     {
         super(image, plugin);
         this.spellInfo = spellInfo;

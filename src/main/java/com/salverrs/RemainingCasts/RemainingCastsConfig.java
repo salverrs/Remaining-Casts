@@ -68,29 +68,30 @@ public interface RemainingCastsConfig extends Config
 		return true;
 	}
 
-	@ConfigItem(
-			keyName = "infoBoxSpellLimit",
-			name = "Maximum spells",
-			description = "The maximum number of spells to track remaining casts for. 0 represents no limit",
-			section = infoboxSection,
-			position = 4
-	)
-	default int infoBoxSpellLimit()
-	{
-		return 0;
-	}
-
 	@Units(Units.SECONDS)
 	@ConfigItem(
 			keyName = "infoBoxExpirySeconds",
 			name = "Infobox expiry",
 			description = "The number of seconds until an infobox will expire. 0 represents no expiry",
 			section = infoboxSection,
-			position = 5
+			position = 4
 	)
 	default int infoBoxExpirySeconds()
 	{
 		return 15;
+	}
+
+
+	@ConfigItem(
+			keyName = "infoBoxSpellLimit",
+			name = "Maximum spells",
+			description = "The maximum number of spells to track remaining casts for. 0 represents no limit",
+			section = infoboxSection,
+			position = 5
+	)
+	default int infoBoxSpellLimit()
+	{
+		return 0;
 	}
 
 	@ConfigItem(
@@ -137,6 +138,18 @@ public interface RemainingCastsConfig extends Config
 			position = 9
 	)
 	default String filterList()
+	{
+		return "";
+	}
+
+	@ConfigItem(
+			keyName = "pinnedSpells",
+			name = "Pinned Spells",
+			description = "These spells will always display an infobox that will never expire.",
+			section = infoboxSection,
+			position = 10
+	)
+	default String pinnedSpells()
 	{
 		return "";
 	}

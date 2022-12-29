@@ -8,16 +8,16 @@ import com.salverrs.RemainingCasts.Model.SpellFilterOption;
 import com.salverrs.RemainingCasts.Util.SpellIds;
 import com.salverrs.RemainingCasts.Model.SpellInfo;
 import net.runelite.api.Client;
+import net.runelite.api.GameState;
 import net.runelite.api.MenuEntry;
 import net.runelite.api.SpriteID;
-import net.runelite.api.events.ClientTick;
-import net.runelite.api.events.MenuOptionClicked;
-import net.runelite.api.events.WidgetClosed;
-import net.runelite.api.events.WidgetLoaded;
+import net.runelite.api.events.*;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetID;
 import net.runelite.api.widgets.WidgetInfo;
+import net.runelite.client.callback.ClientThread;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.game.SpriteManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.ui.overlay.infobox.InfoBoxManager;
@@ -33,8 +33,9 @@ public class RemainingCastTracker {
 
     private Map<SpellInfo, RemainingCastsInfoBox> castBoxes = new HashMap<>();
     private Queue<SpellInfo> spellQueue = new LinkedList<>();
-    private Map<Integer, Integer> runeCount;
+    private Map<Integer, Integer> runeCount = new HashMap<>();
     private boolean active = false;
+    private boolean initUpdate = false;
     private boolean otherItemContainerOpen = false;
     private int lastCastSpriteId = -1;
     private String lastCastSpellName;
@@ -43,7 +44,9 @@ public class RemainingCastTracker {
     @Inject
     private Client client;
     @Inject
-    private CastSuppliesTracker runeCountTracker;
+    private ClientThread clientThread;
+    @Inject
+    private CastSuppliesTracker suppliesTracker;
     @Inject
     private SpriteManager spriteManager;
     @Inject
@@ -129,6 +132,18 @@ public class RemainingCastTracker {
     }
 
     @Subscribe
+    public void onItemContainerChanged(ItemContainerChanged event)
+    {
+        if (!active || initUpdate)
+            return;
+
+        runeCount = suppliesTracker.forceUpdateRuneCount();
+        updatePinnedSpells();
+        updateCastBoxes(null);
+        initUpdate = true;
+    }
+
+    @Subscribe
     public void onWidgetLoaded(WidgetLoaded event)
     {
         if (isOtherItemContainerWidget(event.getGroupId()))
@@ -148,15 +163,26 @@ public class RemainingCastTracker {
         }
     }
 
+    @Subscribe
+    public void onConfigChanged(ConfigChanged configChanged)
+    {
+        if (!configChanged.getGroup().equals(RemainingCastsPlugin.CONFIG_GROUP))
+            return;
+
+        updatePinnedSpells();
+    }
+
     public void start(Plugin plugin)
     {
         active = true;
         this.plugin = plugin;
+        updatePinnedSpells();
     }
 
     public void stop()
     {
         active = false;
+        initUpdate = false;
         lastCastSpriteId = -1;
         lastCastSpellName = null;
         removeAllCastBoxes();
@@ -223,7 +249,7 @@ public class RemainingCastTracker {
             createRemainingCastsBox(spellInfo);
     }
 
-    private void createRemainingCastsBox(SpellInfo spellInfo)
+    private RemainingCastsInfoBox createRemainingCastsBox(SpellInfo spellInfo)
     {
         final BufferedImage sprite = config.showInfoBoxSprites()
                 ? spriteManager.getSprite(spellInfo.getSpriteId(), 0)
@@ -232,14 +258,16 @@ public class RemainingCastTracker {
         final int threshold = config.infoBoxThreshold();
         final int remainingCasts = spellInfo.getSpellCost().getRemainingCasts(runeCount);
         if (threshold != 0 && remainingCasts > threshold)
-            return;
+            return null;
 
-        final RemainingCastsInfoBox infoBox = new RemainingCastsInfoBox(spellInfo, runeCount, sprite, config.shortenCastAmounts(), plugin);
+        final RemainingCastsInfoBox infoBox = new RemainingCastsInfoBox(spellInfo, runeCount, sprite, config.shortenCastAmounts(), false, plugin);
         infoBoxManager.addInfoBox(infoBox);
         castBoxes.put(spellInfo, infoBox);
         spellQueue.add(spellInfo);
 
         checkCastBoxLimit();
+
+        return infoBox;
     }
 
     private void checkCastBoxLimit()
@@ -264,11 +292,43 @@ public class RemainingCastTracker {
         for (final SpellInfo spellInfo : castBoxes.keySet())
         {
             final RemainingCastsInfoBox box = castBoxes.get(spellInfo);
-            if (box.getActiveTime() > expirySeconds)
+            if (!box.isPinned() && box.getActiveTime() > expirySeconds)
                 expired.add(spellInfo);
         }
 
         expired.forEach(this::removeCastBox);
+    }
+
+    private void updatePinnedSpells()
+    {
+        final String pinned = config.pinnedSpells();
+        final List<String> spellNames = Text.fromCSV(pinned);
+
+        if (spellNames.size() == 0)
+            return;
+
+        clientThread.invoke(() ->
+        {
+            castBoxes.values().forEach(cb -> cb.setPinned(false));
+            spellNames.forEach(name ->
+            {
+                final SpellInfo info = SpellIds.getSpellByName(name);
+                if (info == null)
+                    return;
+
+                RemainingCastsInfoBox box = castBoxes.getOrDefault(info, null);
+                if (box != null)
+                {
+                    box.setPinned(true);
+                }
+                else
+                {
+                    box = createRemainingCastsBox(info);
+                    if (box != null)
+                        box.setPinned(true);
+                }
+            });
+        });
     }
 
     private void removeCastBox(SpellInfo spellInfo)
@@ -329,5 +389,6 @@ public class RemainingCastTracker {
                 return false;
         }
     }
+
 
 }
