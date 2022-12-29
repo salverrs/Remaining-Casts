@@ -52,6 +52,9 @@ public class TooltipCastUpdater {
         final List<MenuEntry> entries = new ArrayList<>(Arrays.asList(client.getMenuEntries()));
         boolean appendToOption = false;
 
+        if (entries.stream().anyMatch(e -> e.getOption().equals("Examine")))
+            return;
+
         for (MenuEntry entry : entries)
         {
             final Widget widget = entry.getWidget();

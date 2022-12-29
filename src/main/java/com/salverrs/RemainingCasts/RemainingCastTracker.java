@@ -47,7 +47,6 @@ public class RemainingCastTracker {
     private Client client;
     @Inject
     private ClientThread clientThread;
-
     @Inject
     private Notifier notifier;
     @Inject
@@ -233,7 +232,7 @@ public class RemainingCastTracker {
 
     private void updateWarnings(SpellInfo recentCast)
     {
-        if (!config.useChatWarnings())
+        if (!config.useChatWarnings() || recentCast == null)
             return;
 
         final List<Integer> thresholds = new ArrayList<>();
@@ -412,11 +411,11 @@ public class RemainingCastTracker {
 
         if (config.spellFilterOption() == SpellFilterOption.BLACKLIST)
         {
-            return spellNames.stream().anyMatch(s -> spellInfo.getName().equals(s));
+            return spellNames.stream().anyMatch(s -> spellInfo.getName().equalsIgnoreCase(s));
         }
         else if (config.spellFilterOption() == SpellFilterOption.WHITELIST)
         {
-            return spellNames.stream().noneMatch(s -> spellInfo.getName().equals(s));
+            return spellNames.stream().noneMatch(s -> spellInfo.getName().equalsIgnoreCase(s));
         }
 
         return false;
