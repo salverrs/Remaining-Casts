@@ -197,13 +197,24 @@ public class RemainingCastTracker {
 
     private void updateCastBoxes(SpellInfo recentCast)
     {
+        final int threshold = config.infoBoxThreshold();
+        final List<SpellInfo> toRemove = new ArrayList<>();
+
         if (recentCast != null && castBoxes.containsKey(recentCast))
         {
             final RemainingCastsInfoBox infoBox = castBoxes.get(recentCast);
             infoBox.update(runeCount, true);
         }
 
-        castBoxes.values().forEach(c -> c.update(runeCount));
+        castBoxes.values().forEach(c ->
+        {
+            if (threshold != 0 && c.getRemainingCasts() > threshold)
+                toRemove.add(c.getSpellInfo());
+            else
+                c.update(runeCount);
+        });
+
+        toRemove.forEach(this::removeCastBox);
     }
 
     private void processCast(SpellInfo spellInfo)
@@ -217,6 +228,11 @@ public class RemainingCastTracker {
         final BufferedImage sprite = config.showInfoBoxSprites()
                 ? spriteManager.getSprite(spellInfo.getSpriteId(), 0)
                 : getSpellBookSprite();
+
+        final int threshold = config.infoBoxThreshold();
+        final int remainingCasts = spellInfo.getSpellCost().getRemainingCasts(runeCount);
+        if (threshold != 0 && remainingCasts > threshold)
+            return;
 
         final RemainingCastsInfoBox infoBox = new RemainingCastsInfoBox(spellInfo, runeCount, sprite, config.shortenCastAmounts(), plugin);
         infoBoxManager.addInfoBox(infoBox);

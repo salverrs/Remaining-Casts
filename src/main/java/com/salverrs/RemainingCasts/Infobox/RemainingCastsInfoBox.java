@@ -3,6 +3,7 @@ package com.salverrs.RemainingCasts.Infobox;
 import com.salverrs.RemainingCasts.Model.SpellCost;
 import com.salverrs.RemainingCasts.Model.SpellInfo;
 import com.salverrs.RemainingCasts.Util.CastUtils;
+import lombok.Getter;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.ui.overlay.infobox.InfoBox;
 
@@ -11,6 +12,7 @@ import java.awt.image.BufferedImage;
 import java.time.Instant;
 import java.util.Map;
 
+@Getter
 public class RemainingCastsInfoBox extends InfoBox
 {
     private SpellInfo spellInfo;

@@ -94,11 +94,23 @@ public interface RemainingCastsConfig extends Config
 	}
 
 	@ConfigItem(
+			keyName = "infoBoxThreshold",
+			name = "Cast threshold",
+			description = "Only show when casts remaining is less than the threshold. 0 represents no threshold.",
+			section = infoboxSection,
+			position = 6
+	)
+	default int infoBoxThreshold()
+	{
+		return 0;
+	}
+
+	@ConfigItem(
 			keyName = "showInfoBoxSprites",
 			name = "Show spell sprites",
 			description = "Show the sprite image for the spell on the infobox. If disabled, the current spell book sprite will be used instead",
 			section = infoboxSection,
-			position = 6
+			position = 7
 	)
 	default boolean showInfoBoxSprites()
 	{
@@ -110,7 +122,7 @@ public interface RemainingCastsConfig extends Config
 			name = "Spell filter",
 			description = "Enable or disable whitelist/blacklist for spells",
 			section = infoboxSection,
-			position = 7
+			position = 8
 	)
 	default SpellFilterOption spellFilterOption()
 	{
@@ -122,7 +134,7 @@ public interface RemainingCastsConfig extends Config
 			name = "Filter list",
 			description = "The names of the spells you wish to whitelist/blacklist as comma separated values",
 			section = infoboxSection,
-			position = 8
+			position = 9
 	)
 	default String filterList()
 	{
