@@ -7,15 +7,17 @@ import com.salverrs.RemainingCasts.Model.RuneChanges;
 import com.salverrs.RemainingCasts.Model.SpellFilterOption;
 import com.salverrs.RemainingCasts.Util.SpellIds;
 import com.salverrs.RemainingCasts.Model.SpellInfo;
-import net.runelite.api.Client;
-import net.runelite.api.GameState;
-import net.runelite.api.MenuEntry;
-import net.runelite.api.SpriteID;
+import net.runelite.api.*;
 import net.runelite.api.events.*;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetID;
 import net.runelite.api.widgets.WidgetInfo;
+import net.runelite.client.Notifier;
 import net.runelite.client.callback.ClientThread;
+import net.runelite.client.chat.ChatColorType;
+import net.runelite.client.chat.ChatMessageBuilder;
+import net.runelite.client.chat.ChatMessageManager;
+import net.runelite.client.chat.QueuedMessage;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.game.SpriteManager;
@@ -45,6 +47,11 @@ public class RemainingCastTracker {
     private Client client;
     @Inject
     private ClientThread clientThread;
+
+    @Inject
+    private Notifier notifier;
+    @Inject
+    private ChatMessageManager chatManager;
     @Inject
     private CastSuppliesTracker suppliesTracker;
     @Inject
@@ -52,6 +59,7 @@ public class RemainingCastTracker {
     @Inject
     private InfoBoxManager infoBoxManager;
     @Inject RemainingCastsConfig config;
+
 
     @Subscribe
     public void onClientTick(ClientTick tick)
@@ -76,6 +84,7 @@ public class RemainingCastTracker {
 
         runeCount = changes.getCurrentRunes();
         updateCastBoxes(spellInfo);
+        updateWarnings(spellInfo);
 
         if (spellInfo == null || isFiltered(spellInfo))
             return;
@@ -97,6 +106,7 @@ public class RemainingCastTracker {
 
         runeCount = changes.getCurrentRunes();
         updateCastBoxes(enchant);
+        updateWarnings(enchant);
 
         if (enchant == null || isFiltered(enchant))
             return;
@@ -220,6 +230,48 @@ public class RemainingCastTracker {
         final int spriteId = w.getSpriteId();
         return SpellIds.getSpellBySpriteId(spriteId);
     }
+
+    private void updateWarnings(SpellInfo recentCast)
+    {
+        if (!config.useChatWarnings())
+            return;
+
+        final List<Integer> thresholds = new ArrayList<>();
+        final List<String> thresholdStrings = Text.fromCSV(config.chatWarningThresholds());
+        thresholdStrings.forEach(ts -> thresholds.add(tryParseInt(ts, -1)));
+        Collections.sort(thresholds);
+
+        if (thresholds.size() == 0)
+            return;
+
+        final int remaining = recentCast.getSpellCost().getRemainingCasts(runeCount);
+
+        for (int val : thresholds)
+        {
+            if (remaining == val)
+            {
+                final String msgContent = recentCast.getName() + " has " + val + " casts remaining.";
+                final String msg = new ChatMessageBuilder()
+                        .append(ChatColorType.HIGHLIGHT)
+                        .append(msgContent)
+                        .build();
+
+                chatManager.queue(QueuedMessage.builder()
+                        .type(ChatMessageType.CONSOLE)
+                        .name(RemainingCastsPlugin.CONFIG_GROUP)
+                        .runeLiteFormattedMessage(msg)
+                        .build());
+
+                if (config.useChatWarningNotifications())
+                    notifier.notify(msgContent);
+
+                break;
+            }
+
+        }
+
+    }
+
 
     private void updateCastBoxes(SpellInfo recentCast)
     {
@@ -387,6 +439,17 @@ public class RemainingCastTracker {
                 return true;
             default:
                 return false;
+        }
+    }
+
+    public int tryParseInt(String value, int defaultVal) {
+        try
+        {
+            return Integer.parseInt(value);
+        }
+        catch (NumberFormatException e)
+        {
+            return defaultVal;
         }
     }
 

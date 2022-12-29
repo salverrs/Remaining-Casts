@@ -45,8 +45,8 @@ public class RemainingCastsPlugin extends Plugin
 	protected void shutDown() throws Exception
 	{
 		eventBus.unregister(runeCountTracker);
-		eventBus.register(castTracker);
-		eventBus.register(tooltipUpdater);
+		eventBus.unregister(castTracker);
+		eventBus.unregister(tooltipUpdater);
 
 		runeCountTracker.stop();
 		castTracker.stop();

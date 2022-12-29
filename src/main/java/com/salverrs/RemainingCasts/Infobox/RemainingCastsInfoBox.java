@@ -44,7 +44,7 @@ public class RemainingCastsInfoBox extends InfoBox
     @Override
     public String getTooltip()
     {
-        return spellInfo.getName() + " - " + remainingCasts + " remaining casts";
+        return spellInfo.getName() + " - " + remainingCasts + " casts remaining";
     }
 
     @Override

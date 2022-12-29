@@ -20,6 +20,13 @@ public interface RemainingCastsConfig extends Config
 	)
 	String infoboxSection = "infoboxes";
 
+	@ConfigSection(
+			name = "Chat warnings",
+			description = "Options relating to remaining casts chat warnings.",
+			position = 2
+	)
+	String warningsSection = "warnings";
+
 	@ConfigItem(
 			keyName = "enableInfoboxes",
 			name = "Show infoboxes",
@@ -144,7 +151,7 @@ public interface RemainingCastsConfig extends Config
 
 	@ConfigItem(
 			keyName = "pinnedSpells",
-			name = "Pinned Spells",
+			name = "Pinned spells",
 			description = "These spells will always display an infobox that will never expire.",
 			section = infoboxSection,
 			position = 10
@@ -153,6 +160,40 @@ public interface RemainingCastsConfig extends Config
 	{
 		return "";
 	}
+
+	@ConfigItem(
+			keyName = "enableChatWarnings",
+			name = "Enable chat warnings",
+			description = "Enable chat warnings when remaining casts drops below a predefined amount.",
+			section = warningsSection,
+			position = 11
+	)
+	default boolean useChatWarnings() { return true;}
+
+	@ConfigItem(
+			keyName = "chatWarningNotification",
+			name = "Enable Notifications",
+			description = "Enable Runelite notification alongside chat warning.",
+			section = warningsSection,
+			position = 12
+	)
+	default boolean useChatWarningNotifications()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+			keyName = "chatWarningThresholds",
+			name = "Chat warning thresholds",
+			description = "The amounts at which a chat warning will be displayed.",
+			section = warningsSection,
+			position = 13
+	)
+	default String chatWarningThresholds()
+	{
+		return "10, 50, 100, 500";
+	}
+
 
 
 }
