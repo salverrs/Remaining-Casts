@@ -17,9 +17,13 @@ All features can be enabled/disabled and configured further through the plugin s
 
 ![image](https://user-images.githubusercontent.com/109300410/209392421-30ac6aaf-a258-409f-8880-08bb89e6ad2d.png)
 
+**Chat warnings**
+
+![image](https://user-images.githubusercontent.com/109300410/210402957-6d38737e-5601-45fd-8703-44d49ec7e562.png)
+
 **Example Config**
 
-![image](https://user-images.githubusercontent.com/109300410/209987654-c51d36b9-2f85-4c47-9f00-20f0ae3af8a1.png)
+![image](https://user-images.githubusercontent.com/109300410/210403131-0a086b35-0c25-4e4a-9f76-e630e347d56a.png)
 
 ### Notes
 
