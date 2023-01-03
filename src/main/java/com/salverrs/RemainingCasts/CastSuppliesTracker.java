@@ -222,9 +222,6 @@ public class CastSuppliesTracker {
         final Set<Integer> runeKeys = new HashSet<>(oldRunes.keySet());
         runeKeys.addAll(newRunes.keySet());
 
-        if (oldRunes.keySet().size() == 0)
-            return changeMap;
-
         for (Integer runeId : runeKeys)
         {
             final int oldQuantity = oldRunes.getOrDefault(runeId, 0);

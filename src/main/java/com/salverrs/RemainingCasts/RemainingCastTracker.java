@@ -37,7 +37,6 @@ public class RemainingCastTracker {
     private Queue<SpellInfo> spellQueue = new LinkedList<>();
     private Map<Integer, Integer> runeCount = new HashMap<>();
     private boolean active = false;
-    private boolean initUpdate = false;
     private boolean otherItemContainerOpen = false;
     private int lastCastSpriteId = -1;
     private String lastCastSpellName;
@@ -57,8 +56,8 @@ public class RemainingCastTracker {
     private SpriteManager spriteManager;
     @Inject
     private InfoBoxManager infoBoxManager;
-    @Inject RemainingCastsConfig config;
-
+    @Inject
+    private RemainingCastsConfig config;
 
     @Subscribe
     public void onClientTick(ClientTick tick)
@@ -149,23 +148,6 @@ public class RemainingCastTracker {
     }
 
     @Subscribe
-    public void onItemContainerChanged(ItemContainerChanged event)
-    {
-        if (!active || initUpdate)
-            return;
-
-        runeCount = suppliesTracker.forceUpdateRuneCount(); // Force initial rune count update
-
-        if (config.enableInfoboxes())
-        {
-            updatePinnedSpells();
-            updateCastBoxes(null);
-        }
-
-        initUpdate = true;
-    }
-
-    @Subscribe
     public void onWidgetLoaded(WidgetLoaded event)
     {
         if (isOtherItemContainerWidget(event.getGroupId()))
@@ -215,7 +197,6 @@ public class RemainingCastTracker {
     public void stop()
     {
         active = false;
-        initUpdate = false;
         lastCastSpriteId = -1;
         lastCastSpellName = null;
         removeAllCastBoxes();
