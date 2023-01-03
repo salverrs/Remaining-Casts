@@ -128,23 +128,11 @@ public interface RemainingCastsConfig extends Config
 	}
 
 	@ConfigItem(
-			keyName = "infoBoxTextColor",
-			name = "Text color",
-			description = "The color of the text displayed in the infobox",
-			section = infoboxSection,
-			position = 8
-	)
-	default Color infoBoxTextColor()
-	{
-		return Color.white;
-	}
-
-	@ConfigItem(
 			keyName = "spellFilterOption",
 			name = "Spell filter",
 			description = "Enable or disable whitelist/blacklist for spells",
 			section = infoboxSection,
-			position = 9
+			position = 8
 	)
 	default SpellFilterOption spellFilterOption()
 	{
@@ -156,7 +144,7 @@ public interface RemainingCastsConfig extends Config
 			name = "Filter list",
 			description = "The names of the spells you wish to whitelist/blacklist as comma separated values",
 			section = infoboxSection,
-			position = 10
+			position = 9
 	)
 	default String filterList()
 	{
@@ -168,11 +156,23 @@ public interface RemainingCastsConfig extends Config
 			name = "Pinned spells",
 			description = "The names of the spells that should always display an infobox which never expires",
 			section = infoboxSection,
-			position = 11
+			position = 10
 	)
 	default String pinnedSpells()
 	{
 		return "";
+	}
+
+	@ConfigItem(
+			keyName = "infoBoxTextColor",
+			name = "Text color",
+			description = "The color of the text displayed in the infobox",
+			section = infoboxSection,
+			position = 11
+	)
+	default Color infoBoxTextColor()
+	{
+		return Color.white;
 	}
 
 	@ConfigItem(
@@ -205,9 +205,19 @@ public interface RemainingCastsConfig extends Config
 	)
 	default String chatWarningThresholds()
 	{
-		return "10, 50, 100, 500";
+		return "0, 10, 50, 100, 500";
 	}
 
-
+	@ConfigItem(
+			keyName = "chatWarningColor",
+			name = "Text color",
+			description = "The color of the text displayed in the chat warning",
+			section = warningsSection,
+			position = 15
+	)
+	default Color chatWarningColor()
+	{
+		return Color.orange;
+	}
 
 }

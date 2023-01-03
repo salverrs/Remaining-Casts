@@ -255,10 +255,11 @@ public class RemainingCastTracker {
         {
             if (remaining == val)
             {
-                final String msgContent = recentCast.getName() + " has " + val + (val != 1 ? " casts " : " cast ") + "remaining.";
+                final String msgContent = getWarningMessage(recentCast.getName(), val);
+
                 final String msg = new ChatMessageBuilder()
-                        .append(ChatColorType.HIGHLIGHT)
-                        .append(msgContent)
+                        .append(ChatColorType.NORMAL)
+                        .append(config.chatWarningColor(), msgContent)
                         .build();
 
                 chatManager.queue(QueuedMessage.builder()
@@ -274,7 +275,14 @@ public class RemainingCastTracker {
             }
 
         }
+    }
 
+    private String getWarningMessage(String spellName, int casts)
+    {
+        String message = spellName + " has " + (casts == 0 ? "no" : casts);
+        message += (casts == 1 ? " cast " : " casts ") + "remaining.";
+
+        return message;
     }
 
     private void updateCastBoxes(SpellInfo recentCast)
