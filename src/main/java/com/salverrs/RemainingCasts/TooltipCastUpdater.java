@@ -150,6 +150,13 @@ public class TooltipCastUpdater {
             if (details == null)
                 return;
 
+            if (details.getSpellName().contains("Home Teleport")) // For consistency
+            {
+                final String newText = "[" + details.getSpellLevel() + "] " + details.getSpellName();
+                spellTitle.setText(newText);
+                return;
+            }
+
             final SpellInfo spellInfo = SpellIds.getSpellByName(details.getSpellName());
             if (spellInfo == null)
                 return;
