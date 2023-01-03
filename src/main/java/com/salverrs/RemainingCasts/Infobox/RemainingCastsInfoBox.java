@@ -2,6 +2,7 @@ package com.salverrs.RemainingCasts.Infobox;
 
 import com.salverrs.RemainingCasts.Model.SpellCost;
 import com.salverrs.RemainingCasts.Model.SpellInfo;
+import com.salverrs.RemainingCasts.RemainingCastsConfig;
 import com.salverrs.RemainingCasts.Util.CastUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,23 +17,22 @@ import java.util.Map;
 @Getter
 public class RemainingCastsInfoBox extends InfoBox
 {
-    private SpellInfo spellInfo;
-    private SpellCost spellCost;
+    private final SpellInfo spellInfo;
+    private final SpellCost spellCost;
+    private RemainingCastsConfig config;
     private int remainingCasts;
     private long lastUpdated;
-    private boolean shouldShorten;
-
     @Setter
     private boolean isPinned;
 
-    public RemainingCastsInfoBox(SpellInfo spellInfo, Map<Integer, Integer> runeCount, BufferedImage image, boolean shorten, boolean isPinned, Plugin plugin)
+    public RemainingCastsInfoBox(SpellInfo spellInfo, Map<Integer, Integer> runeCount, BufferedImage image, Plugin plugin, RemainingCastsConfig config)
     {
         super(image, plugin);
         this.spellInfo = spellInfo;
         this.spellCost = spellInfo.getSpellCost();
         this.lastUpdated = Instant.now().getEpochSecond();
         this.remainingCasts = this.spellCost.getRemainingCasts(runeCount);
-        this.shouldShorten = shorten;
+        this.config = config;
     }
 
     @Override
@@ -44,13 +44,13 @@ public class RemainingCastsInfoBox extends InfoBox
     @Override
     public String getTooltip()
     {
-        return spellInfo.getName() + " - " + remainingCasts + " casts remaining";
+        return spellInfo.getName() + " - " + remainingCasts + (remainingCasts != 1 ? " casts " : " cast ") + "remaining";
     }
 
     @Override
     public Color getTextColor()
     {
-        return Color.white;
+        return config.infoBoxTextColor();
     }
 
     public void update(Map<Integer, Integer> runeCount)
@@ -76,7 +76,7 @@ public class RemainingCastsInfoBox extends InfoBox
         if (remainingCasts == -1)
             return "N/A";
 
-        return shouldShorten ? CastUtils.getShortenedAmount(remainingCasts) : Integer.toString(remainingCasts);
+        return config.shortenCastAmounts() ? CastUtils.getShortenedAmount(remainingCasts) : Integer.toString(remainingCasts);
     }
 
 }

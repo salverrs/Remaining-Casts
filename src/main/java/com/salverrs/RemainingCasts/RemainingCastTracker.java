@@ -23,6 +23,7 @@ import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.game.SpriteManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.ui.overlay.infobox.InfoBoxManager;
+import net.runelite.client.util.ColorUtil;
 import net.runelite.client.util.Text;
 
 import javax.inject.Inject;
@@ -254,14 +255,14 @@ public class RemainingCastTracker {
         {
             if (remaining == val)
             {
-                final String msgContent = recentCast.getName() + " has " + val + " casts remaining.";
+                final String msgContent = recentCast.getName() + " has " + val + (val != 1 ? " casts " : " cast ") + "remaining.";
                 final String msg = new ChatMessageBuilder()
                         .append(ChatColorType.HIGHLIGHT)
                         .append(msgContent)
                         .build();
 
                 chatManager.queue(QueuedMessage.builder()
-                        .type(ChatMessageType.CONSOLE)
+                        .type(ChatMessageType.GAMEMESSAGE)
                         .name(RemainingCastsPlugin.CONFIG_GROUP)
                         .runeLiteFormattedMessage(msg)
                         .build());
@@ -315,7 +316,7 @@ public class RemainingCastTracker {
         if (threshold != 0 && remainingCasts > threshold)
             return null;
 
-        final RemainingCastsInfoBox infoBox = new RemainingCastsInfoBox(spellInfo, runeCount, sprite, config.shortenCastAmounts(), false, plugin);
+        final RemainingCastsInfoBox infoBox = new RemainingCastsInfoBox(spellInfo, runeCount, sprite, plugin, config);
         infoBoxManager.addInfoBox(infoBox);
         castBoxes.put(spellInfo, infoBox);
         spellQueue.add(spellInfo);

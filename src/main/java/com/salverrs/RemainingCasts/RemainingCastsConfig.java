@@ -3,6 +3,8 @@ package com.salverrs.RemainingCasts;
 import com.salverrs.RemainingCasts.Model.SpellFilterOption;
 import net.runelite.client.config.*;
 
+import java.awt.*;
+
 @ConfigGroup(RemainingCastsPlugin.CONFIG_GROUP)
 public interface RemainingCastsConfig extends Config
 {
@@ -126,11 +128,23 @@ public interface RemainingCastsConfig extends Config
 	}
 
 	@ConfigItem(
+			keyName = "infoBoxTextColor",
+			name = "Text color",
+			description = "The color of the text displayed in the infobox",
+			section = infoboxSection,
+			position = 8
+	)
+	default Color infoBoxTextColor()
+	{
+		return Color.white;
+	}
+
+	@ConfigItem(
 			keyName = "spellFilterOption",
 			name = "Spell filter",
 			description = "Enable or disable whitelist/blacklist for spells",
 			section = infoboxSection,
-			position = 8
+			position = 9
 	)
 	default SpellFilterOption spellFilterOption()
 	{
@@ -142,7 +156,7 @@ public interface RemainingCastsConfig extends Config
 			name = "Filter list",
 			description = "The names of the spells you wish to whitelist/blacklist as comma separated values",
 			section = infoboxSection,
-			position = 9
+			position = 10
 	)
 	default String filterList()
 	{
@@ -154,7 +168,7 @@ public interface RemainingCastsConfig extends Config
 			name = "Pinned spells",
 			description = "The names of the spells that should always display an infobox which never expires",
 			section = infoboxSection,
-			position = 10
+			position = 11
 	)
 	default String pinnedSpells()
 	{
@@ -166,7 +180,7 @@ public interface RemainingCastsConfig extends Config
 			name = "Enable chat warnings",
 			description = "Enable chat warnings when remaining casts reach a predefined amount",
 			section = warningsSection,
-			position = 11
+			position = 12
 	)
 	default boolean useChatWarnings() { return true;}
 
@@ -175,7 +189,7 @@ public interface RemainingCastsConfig extends Config
 			name = "Enable notifications",
 			description = "Enable Runelite notification alongside the chat warning",
 			section = warningsSection,
-			position = 12
+			position = 13
 	)
 	default boolean useChatWarningNotifications()
 	{
@@ -187,7 +201,7 @@ public interface RemainingCastsConfig extends Config
 			name = "Chat warning thresholds",
 			description = "The cast amounts at which a chat warning will be triggered",
 			section = warningsSection,
-			position = 13
+			position = 14
 	)
 	default String chatWarningThresholds()
 	{
