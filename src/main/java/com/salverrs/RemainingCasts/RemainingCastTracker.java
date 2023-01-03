@@ -23,7 +23,6 @@ import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.game.SpriteManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.ui.overlay.infobox.InfoBoxManager;
-import net.runelite.client.util.ColorUtil;
 import net.runelite.client.util.Text;
 
 import javax.inject.Inject;
@@ -310,10 +309,10 @@ public class RemainingCastTracker {
     private void processCast(SpellInfo spellInfo)
     {
         if (!castBoxes.containsKey(spellInfo))
-            createRemainingCastsBox(spellInfo);
+            createRemainingCastsBox(spellInfo, false);
     }
 
-    private RemainingCastsInfoBox createRemainingCastsBox(SpellInfo spellInfo)
+    private RemainingCastsInfoBox createRemainingCastsBox(SpellInfo spellInfo, boolean isPinned)
     {
         final BufferedImage sprite = config.showInfoBoxSprites()
                 ? spriteManager.getSprite(spellInfo.getSpriteId(), 0)
@@ -321,13 +320,16 @@ public class RemainingCastTracker {
 
         final int threshold = config.infoBoxThreshold();
         final int remainingCasts = spellInfo.getSpellCost().getRemainingCasts(runeCount);
-        if (threshold != 0 && remainingCasts > threshold)
+        if (!isPinned && threshold != 0 && remainingCasts > threshold)
             return null;
 
         final RemainingCastsInfoBox infoBox = new RemainingCastsInfoBox(spellInfo, runeCount, sprite, plugin, config);
+        infoBox.setPinned(isPinned);
         infoBoxManager.addInfoBox(infoBox);
         castBoxes.put(spellInfo, infoBox);
-        spellQueue.add(spellInfo);
+
+        if (!isPinned)
+            spellQueue.add(spellInfo);
 
         checkCastBoxLimit();
 
@@ -388,7 +390,7 @@ public class RemainingCastTracker {
                 }
                 else
                 {
-                    box = createRemainingCastsBox(info);
+                    box = createRemainingCastsBox(info, true);
                     if (box != null)
                         box.setPinned(true);
                 }

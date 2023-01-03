@@ -23,7 +23,7 @@ public class RemainingCastsPlugin extends Plugin
 	@Inject
 	private EventBus eventBus;
 	@Inject
-	private CastSuppliesTracker runeCountTracker;
+	private CastSuppliesTracker castSuppliesTracker;
 	@Inject
 	private RemainingCastTracker castTracker;
 	@Inject
@@ -32,11 +32,11 @@ public class RemainingCastsPlugin extends Plugin
 	@Override
 	protected void startUp() throws Exception
 	{
-		eventBus.register(runeCountTracker);
+		eventBus.register(castSuppliesTracker);
 		eventBus.register(castTracker);
 		eventBus.register(tooltipUpdater);
 
-		runeCountTracker.start();
+		castSuppliesTracker.start();
 		castTracker.start(this);
 		tooltipUpdater.start();
 	}
@@ -44,11 +44,11 @@ public class RemainingCastsPlugin extends Plugin
 	@Override
 	protected void shutDown() throws Exception
 	{
-		eventBus.unregister(runeCountTracker);
+		eventBus.unregister(castSuppliesTracker);
 		eventBus.unregister(castTracker);
 		eventBus.unregister(tooltipUpdater);
 
-		runeCountTracker.stop();
+		castSuppliesTracker.stop();
 		castTracker.stop();
 		tooltipUpdater.stop();
 	}

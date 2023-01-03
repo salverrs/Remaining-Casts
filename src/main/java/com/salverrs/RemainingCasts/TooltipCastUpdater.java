@@ -30,7 +30,7 @@ public class TooltipCastUpdater {
     @Inject
     private ClientThread clientThread;
     @Inject
-    private CastSuppliesTracker runeCountTracker;
+    private CastSuppliesTracker castSuppliesTracker;
     @Inject RemainingCastsConfig config;
 
     public void start()
@@ -74,7 +74,7 @@ public class TooltipCastUpdater {
             if (spellInfo == null)
                 return;
 
-            final Map<Integer, Integer> runeCount = runeCountTracker.getLastRuneCount();
+            final Map<Integer, Integer> runeCount = castSuppliesTracker.getLastRuneCount();
             final int numCasts = spellInfo.getSpellCost().getRemainingCasts(runeCount);
             final String casts = "(" + getRemainingCastsString(numCasts) + ")";
 
@@ -162,7 +162,7 @@ public class TooltipCastUpdater {
                 return;
 
             final SpellCost spellCost = spellInfo.getSpellCost();
-            final int numCasts = spellCost.getRemainingCasts(runeCountTracker.getLastRuneCount());
+            final int numCasts = spellCost.getRemainingCasts(castSuppliesTracker.getLastRuneCount());
 
             String newText = "[" + details.getSpellLevel() + "] " + details.getSpellName();
             newText += " (" + getRemainingCastsString(numCasts) + ")" ;
