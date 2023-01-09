@@ -3,6 +3,7 @@
 This plugin shows the remaining number of casts for spells.
 
 - The remaining casts can be displayed on the menu tooltip, spell tooltip and as individual infoboxes.
+- Autocast tooltips are replaced with the active spell name and it's remaining casts.
 - Spells can be whitelisted, blacklisted and pinned by name.
 - Chat warnings can be configured at predefined cast amounts.
 
@@ -16,6 +17,9 @@ All features can be enabled/disabled and configured further through the plugin s
 **Tooltips**
 
 ![image](https://user-images.githubusercontent.com/109300410/209392421-30ac6aaf-a258-409f-8880-08bb89e6ad2d.png)
+
+![New Project(13)](https://user-images.githubusercontent.com/109300410/211358769-ebcff5f8-2420-48f8-9811-7ab9fb5da6b8.png)
+
 
 **Chat warnings**
 
