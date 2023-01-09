@@ -10,6 +10,7 @@ import net.runelite.api.events.ClientTick;
 import net.runelite.api.events.ScriptPostFired;
 import net.runelite.api.events.ScriptPreFired;
 import net.runelite.api.widgets.Widget;
+import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.util.Text;
@@ -61,6 +62,29 @@ public class TooltipCastUpdater {
             if (widget == null)
                 continue;
 
+            // Autocast 'Choose spell' menu replacement
+            if (entry.getOption().equals("Choose spell"))
+            {
+                final Widget spellIcon = client.getWidget(WidgetInfo.COMBAT_SPELL_ICON);
+
+                if (spellIcon == null)
+                    continue;
+
+                final int spriteId = spellIcon.getSpriteId();
+                final SpellInfo spellInfo = SpellIds.getSpellBySpriteId(spriteId);
+
+                if (spellInfo == null)
+                    continue;
+
+                final Map<Integer, Integer> runeCount = castSuppliesTracker.getLastRuneCount();
+                final int numCasts = spellInfo.getSpellCost().getRemainingCasts(runeCount);
+                final String casts = "(" + getRemainingCastsString(numCasts) + ")";
+
+                entry.setOption(spellInfo.getName() + " " + casts);
+                continue;
+            }
+
+            // Spell book and autocast spell select menu replacement
             String spellName = Text.removeFormattingTags(widget.getName()); // Standard spell book interface
             SpellInfo spellInfo = SpellIds.getSpellByName(spellName);
 
