@@ -28,6 +28,7 @@ import net.runelite.client.util.Text;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.awt.image.BufferedImage;
+import java.time.Instant;
 import java.util.*;
 
 @Singleton
@@ -41,6 +42,10 @@ public class RemainingCastTracker {
     private int lastCastSpriteId = -1;
     private String lastCastSpellName;
     private Plugin plugin;
+
+    private long lastSpellCastTime = 0;
+    private long lastManualCastSpellTime = 0;
+    private long lastManualAttackTime = 0;
 
     @Inject
     private Client client;
@@ -81,6 +86,7 @@ public class RemainingCastTracker {
             spellInfo = null;
 
         runeCount = changes.getCurrentRunes();
+        lastSpellCastTime = Instant.now().getEpochSecond();
 
         if (config.enableInfoboxes())
             updateCastBoxes(spellInfo);
@@ -130,6 +136,12 @@ public class RemainingCastTracker {
         final String option = entry.getOption();
         final String target = entry.getTarget();
 
+        if (option.equals("Attack"))
+        {
+            lastManualAttackTime = Instant.now().getEpochSecond(); // Autocast attack option
+            return;
+        }
+
         if (!option.equals("Cast") && !target.contains("Teleport"))
             return;
 
@@ -138,6 +150,11 @@ public class RemainingCastTracker {
 
         if (SpellIds.getSpellByName(spellName) != null)
             lastCastSpellName = spellName;
+
+        if (widget == null || widget.getTargetVerb().isEmpty()) // Spell actually cast, not just selected
+        {
+            lastManualCastSpellTime = Instant.now().getEpochSecond();
+        }
 
         if (widget == null)
             return;
@@ -204,17 +221,28 @@ public class RemainingCastTracker {
 
     private SpellInfo getLastSpellCasted(RuneChanges changes)
     {
-        SpellInfo spellInfo = lastCastSpriteId != -1 ? SpellIds.getSpellBySpriteId(lastCastSpriteId) : null;
-        if (matchesSpellInfo(spellInfo, changes))
-            return spellInfo;
+        final boolean autoCastFirst = wasLastCastAutocast();
 
-        spellInfo = lastCastSpellName != null ? SpellIds.getSpellByName(lastCastSpellName) : null;
-        if (matchesSpellInfo(spellInfo, changes))
-            return spellInfo;
+        if (autoCastFirst) // There is probably a cleaner way to do this
+        {
+            SpellInfo spellInfo = getSpellFromAutocast(changes);
+            if (spellInfo != null)
+                return spellInfo;
 
-        spellInfo = getSpellFromAutocast();
-        if (matchesSpellInfo(spellInfo, changes))
-            return spellInfo;
+            spellInfo = getSpellFromManualCast(changes);
+            if (spellInfo != null)
+                return spellInfo;
+        }
+        else
+        {
+            SpellInfo spellInfo = getSpellFromManualCast(changes);
+            if (spellInfo != null)
+                return spellInfo;
+
+            spellInfo = getSpellFromAutocast(changes);
+            if (spellInfo != null)
+                return spellInfo;
+        }
 
         return null;
     }
@@ -225,14 +253,37 @@ public class RemainingCastTracker {
         return info != null && info.getSpellCost().matchesCost(cost, changes.getUnlimitedRunes());
     }
 
-    private SpellInfo getSpellFromAutocast()
+    private SpellInfo getSpellFromManualCast(RuneChanges changes)
+    {
+        SpellInfo spellInfo = lastCastSpriteId != -1 ? SpellIds.getSpellBySpriteId(lastCastSpriteId) : null;
+        if (matchesSpellInfo(spellInfo, changes))
+            return spellInfo;
+
+        spellInfo = lastCastSpellName != null ? SpellIds.getSpellByName(lastCastSpellName) : null;
+        if (matchesSpellInfo(spellInfo, changes))
+            return spellInfo;
+
+        return null;
+    }
+
+    private SpellInfo getSpellFromAutocast(RuneChanges changes)
     {
         final Widget w = client.getWidget(WidgetInfo.COMBAT_SPELL_ICON);
         if (w == null)
             return null;
 
         final int spriteId = w.getSpriteId();
-        return SpellIds.getSpellBySpriteId(spriteId);
+        final SpellInfo spellInfo = SpellIds.getSpellBySpriteId(spriteId);
+
+        return matchesSpellInfo(spellInfo, changes) ? spellInfo : null;
+    }
+
+    private boolean wasLastCastAutocast()
+    {
+        if (lastManualAttackTime > lastManualCastSpellTime)
+            return true;
+
+        return lastManualCastSpellTime < lastSpellCastTime;
     }
 
     private void updateWarnings(SpellInfo recentCast)
