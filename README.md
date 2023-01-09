@@ -30,3 +30,4 @@ All features can be enabled/disabled and configured further through the plugin s
 - Doesn't currently support powered staves.
 - Bryophyta's staff is semi-supported, it's assumed to provide infinite nature runes but charges are not tracked.
 - Required levels are shortened on spell tooltips to conserve space e.g. Level 15 -> [15].
+- Pinned spells will ignore cast thresholds, infobox expiry time and spell limits.
