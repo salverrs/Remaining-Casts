@@ -7,8 +7,8 @@ import java.util.*;
 
 @Getter
 public class SpellCost {
-    private int[] runes;
-    private int[] quantities;
+    private final int[] runes;
+    private final int[] quantities;
 
     public SpellCost(int[] runeIds, int[] quantities)
     {
@@ -24,7 +24,7 @@ public class SpellCost {
         for (int i = 0; i < runes.length; i++)
         {
             final int targetRuneId = runes[i];
-            if (!unlimitedRunes.contains(targetRuneId) && (!runeCount.containsKey(targetRuneId) || runeCount.get(targetRuneId) != quantities[i]))
+            if (!unlimitedRunes.contains(targetRuneId) && (!runeCount.containsKey(targetRuneId) || runeCount.get(targetRuneId) < quantities[i]))
                 return false;
         }
 
