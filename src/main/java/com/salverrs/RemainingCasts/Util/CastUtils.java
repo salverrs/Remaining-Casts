@@ -4,6 +4,10 @@ public class CastUtils {
 
     public static String getShortenedAmount(double amount)
     {
+        if (amount > 1000000000)
+        {
+            return String.format("%.1f", amount / 1000000000) + "b";
+        }
         if (amount > 1000000)
         {
             return String.format("%.1f", amount / 1000000) + "m";
