@@ -82,7 +82,7 @@ public class RemainingCastTracker {
         final RuneChanges changes = event.getChanges();
         SpellInfo spellInfo = getLastSpellCasted(changes);
 
-        if (otherItemContainerOpen) // Ignore all item deposits
+        if (otherItemContainerOpen || client.getGameState() != GameState.LOGGED_IN) // Ignore all item deposits
             spellInfo = null;
 
         runeCount = changes.getCurrentRunes();
@@ -103,7 +103,7 @@ public class RemainingCastTracker {
     @Subscribe
     public void onBoltsEnchanted(BoltsEnchanted event)
     {
-        if (!active || (!config.enableInfoboxes() && !config.useChatWarnings()))
+        if (!active || (!config.enableInfoboxes() && !config.useChatWarnings()) || client.getGameState() != GameState.LOGGED_IN)
             return;
 
         final RuneChanges changes = event.getChanges();
