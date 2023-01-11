@@ -66,11 +66,20 @@ public interface RemainingCastsConfig extends Config
 	}
 
 	@ConfigItem(
+			keyName = "enableChatWarnings",
+			name = "Show chat warnings",
+			description = "Show chat warnings when remaining casts reach a predefined amount",
+			section = generalSection,
+			position = 3
+	)
+	default boolean useChatWarnings() { return true;}
+
+	@ConfigItem(
 			keyName = "shortenCastAmounts",
 			name = "Shorten cast amounts",
 			description = "Shorten remaining cast amounts (e.g. 2512 -> 2.5k)",
 			section = generalSection,
-			position = 3
+			position = 4
 	)
 	default boolean shortenCastAmounts()
 	{
@@ -83,7 +92,7 @@ public interface RemainingCastsConfig extends Config
 			name = "Infobox expiry",
 			description = "The number of seconds until an infobox will expire - 0 represents no expiry",
 			section = infoboxSection,
-			position = 4
+			position = 5
 	)
 	default int infoBoxExpirySeconds()
 	{
@@ -96,7 +105,7 @@ public interface RemainingCastsConfig extends Config
 			name = "Maximum spells",
 			description = "The maximum number of spells to track remaining casts for - 0 represents no limit",
 			section = infoboxSection,
-			position = 5
+			position = 6
 	)
 	default int infoBoxSpellLimit()
 	{
@@ -108,7 +117,7 @@ public interface RemainingCastsConfig extends Config
 			name = "Cast threshold",
 			description = "Only show when casts remaining is less than the threshold - 0 represents no threshold",
 			section = infoboxSection,
-			position = 6
+			position = 7
 	)
 	default int infoBoxThreshold()
 	{
@@ -116,11 +125,23 @@ public interface RemainingCastsConfig extends Config
 	}
 
 	@ConfigItem(
+			keyName = "showDetailedTooltip",
+			name = "Show cost in tooltip",
+			description = "Show the spell's rune cost within the infobox tooltip",
+			section = infoboxSection,
+			position = 8
+	)
+	default boolean showDetailedTooltip()
+	{
+		return true;
+	}
+
+	@ConfigItem(
 			keyName = "showInfoBoxSprites",
 			name = "Show spell sprites",
 			description = "Show the sprite image for the spell on the infobox",
 			section = infoboxSection,
-			position = 7
+			position = 9
 	)
 	default boolean showInfoBoxSprites()
 	{
@@ -132,7 +153,7 @@ public interface RemainingCastsConfig extends Config
 			name = "Spell filter",
 			description = "Enable or disable whitelist/blacklist for spells",
 			section = infoboxSection,
-			position = 8
+			position = 10
 	)
 	default SpellFilterOption spellFilterOption()
 	{
@@ -144,7 +165,7 @@ public interface RemainingCastsConfig extends Config
 			name = "Filter list",
 			description = "The names of the spells you wish to whitelist/blacklist as comma separated values",
 			section = infoboxSection,
-			position = 9
+			position = 11
 	)
 	default String filterList()
 	{
@@ -156,7 +177,7 @@ public interface RemainingCastsConfig extends Config
 			name = "Pinned spells",
 			description = "The names of the spells that should always display an infobox which never expires",
 			section = infoboxSection,
-			position = 10
+			position = 12
 	)
 	default String pinnedSpells()
 	{
@@ -168,7 +189,7 @@ public interface RemainingCastsConfig extends Config
 			name = "Text color",
 			description = "The color of the text displayed in the infobox",
 			section = infoboxSection,
-			position = 11
+			position = 13
 	)
 	default Color infoBoxTextColor()
 	{
@@ -176,20 +197,11 @@ public interface RemainingCastsConfig extends Config
 	}
 
 	@ConfigItem(
-			keyName = "enableChatWarnings",
-			name = "Enable chat warnings",
-			description = "Enable chat warnings when remaining casts reach a predefined amount",
-			section = warningsSection,
-			position = 12
-	)
-	default boolean useChatWarnings() { return true;}
-
-	@ConfigItem(
 			keyName = "chatWarningNotification",
 			name = "Enable notifications",
 			description = "Enable Runelite notification alongside the chat warning",
 			section = warningsSection,
-			position = 13
+			position = 14
 	)
 	default boolean useChatWarningNotifications()
 	{
@@ -201,7 +213,7 @@ public interface RemainingCastsConfig extends Config
 			name = "Chat warning thresholds",
 			description = "The cast amounts at which a chat warning will be triggered",
 			section = warningsSection,
-			position = 14
+			position = 15
 	)
 	default String chatWarningThresholds()
 	{
@@ -213,7 +225,7 @@ public interface RemainingCastsConfig extends Config
 			name = "Text color",
 			description = "The color of the text displayed in the chat warning",
 			section = warningsSection,
-			position = 15
+			position = 16
 	)
 	default Color chatWarningColor()
 	{

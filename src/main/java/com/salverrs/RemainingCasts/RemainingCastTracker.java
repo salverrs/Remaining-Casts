@@ -20,6 +20,7 @@ import net.runelite.client.chat.ChatMessageManager;
 import net.runelite.client.chat.QueuedMessage;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
+import net.runelite.client.game.ItemManager;
 import net.runelite.client.game.SpriteManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.ui.overlay.infobox.InfoBoxManager;
@@ -61,6 +62,8 @@ public class RemainingCastTracker {
     private SpriteManager spriteManager;
     @Inject
     private InfoBoxManager infoBoxManager;
+    @Inject
+    private ItemManager itemManager;
     @Inject
     private RemainingCastsConfig config;
 
@@ -374,7 +377,7 @@ public class RemainingCastTracker {
         if (!isPinned && threshold != 0 && remainingCasts > threshold)
             return null;
 
-        final RemainingCastsInfoBox infoBox = new RemainingCastsInfoBox(spellInfo, runeCount, sprite, plugin, config);
+        final RemainingCastsInfoBox infoBox = new RemainingCastsInfoBox(spellInfo, runeCount, sprite, plugin, config, itemManager);
         infoBox.setPinned(isPinned);
         infoBoxManager.addInfoBox(infoBox);
         castBoxes.put(spellInfo, infoBox);
