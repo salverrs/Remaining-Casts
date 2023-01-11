@@ -132,12 +132,16 @@ public class RemainingCastsInfoBox extends InfoBox
             advTooltip.append("</br>")
                     .append(runeName)
                     .append(": ")
-                    .append(available)
+                    .append(available != Integer.MAX_VALUE ? available : "*")
                     .append("/")
-                    .append(quantity)
-                    .append(" (")
+                    .append(quantity);
+
+            if (available != Integer.MAX_VALUE)
+            {
+                advTooltip.append(" (")
                     .append(floorDiv)
                     .append(")");
+            }
         }
 
         tooltip = advTooltip.toString();
