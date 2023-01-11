@@ -24,10 +24,11 @@ public class RemainingCastsInfoBox extends InfoBox
     private final SpellCost spellCost;
     private final RemainingCastsConfig config;
     private final String[] runeNames;
-    private String tooltip;
+    private String tooltip = "";
     private Map<Integer, Integer> runeCount;
     private int remainingCasts;
     private long lastUpdated;
+    private boolean advTooltipDisabled = false;
     @Setter
     private boolean isPinned;
 
@@ -42,9 +43,16 @@ public class RemainingCastsInfoBox extends InfoBox
         this.config = config;
 
         final int[] runes = spellCost.getRunes();
-        this.runeNames = new String[spellCost.getRunes().length];
+        this.runeNames = new String[runes.length];
         for (int i = 0; i < runes.length; i++)
+        {
             this.runeNames[i] = itemManager.getItemComposition(runes[i]).getName();
+            if (this.runeNames[i] == null || this.runeNames[i].equals(""))
+            {
+                advTooltipDisabled = true;
+                break;
+            }
+        }
 
         buildTooltip();
     }
@@ -99,7 +107,7 @@ public class RemainingCastsInfoBox extends InfoBox
     {
         String base = spellInfo.getName() + " - " + remainingCasts + (remainingCasts != 1 ? " casts " : " cast ") + "remaining";
 
-        if (!config.showDetailedTooltip())
+        if (!config.showDetailedTooltip() || advTooltipDisabled)
         {
             tooltip = base;
             return;
