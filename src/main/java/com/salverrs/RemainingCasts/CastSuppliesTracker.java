@@ -71,6 +71,7 @@ public class CastSuppliesTracker {
     public void start()
     {
         active = true;
+        requiresPostUpdate = true;
     }
 
     public void stop()
