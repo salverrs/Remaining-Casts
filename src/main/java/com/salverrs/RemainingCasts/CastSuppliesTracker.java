@@ -130,6 +130,8 @@ public class CastSuppliesTracker {
         Arrays.stream(equipmentItems).forEach(i -> updateEquipmentItems(i.getId(), i.getQuantity()));
     }
 
+    // Varbit/4145 fountain of runes
+
     private void updateInventoryItem(int itemId, int quantity)
     {
         if (itemId == ItemID.RUNE_POUCH || itemId == ItemID.RUNE_POUCH_L)
@@ -142,9 +144,14 @@ public class CastSuppliesTracker {
             updateRunePouchItems(true);
             return;
         }
-        else if (itemId == ItemID.RUNE_POUCH_27086) // LMS Rune pouch
+        else if (itemId == ItemID.RUNE_POUCH_23650) // LMS Rune pouch
         {
             addLMSRunePouch();
+            return;
+        }
+        else if (itemId == ItemID.RUNE_POUCH_27086) // Emir's Arena Rune pouch (assumed to contain all, unable to get specific runes yet)
+        {
+            addUnlimitedRunePouch();
             return;
         }
 
@@ -200,6 +207,12 @@ public class CastSuppliesTracker {
         runeCount.put(ItemID.DEATH_RUNE, Integer.MAX_VALUE);
         runeCount.put(ItemID.BLOOD_RUNE, Integer.MAX_VALUE);
         runeCount.put(ItemID.SOUL_RUNE, Integer.MAX_VALUE);
+    }
+
+    private void addUnlimitedRunePouch()
+    {
+        final Set<Integer> allRuneIds = RuneIds.getAllRuneIds();
+        allRuneIds.forEach(id -> runeCount.put(id, Integer.MAX_VALUE));
     }
 
     private void updateRuneCount(int runeId, int quantity)
