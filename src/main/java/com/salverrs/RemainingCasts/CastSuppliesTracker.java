@@ -27,9 +27,9 @@ public class CastSuppliesTracker {
     private static final int[] RUNE_POUCH_AMOUNT_VARBITS = {
             Varbits.RUNE_POUCH_AMOUNT1, Varbits.RUNE_POUCH_AMOUNT2, Varbits.RUNE_POUCH_AMOUNT3, Varbits.RUNE_POUCH_AMOUNT4
     };
+    private static final int FOUNTAIN_OF_RUNES_VARBIT = 4145;
 
     final private Map<Integer, Integer> runeCount = new HashMap<>();
-
     final private Set<Integer> unlimitedRunes = new HashSet<>();
     private RuneChanges lastChanges;
     private boolean active = false;
@@ -114,6 +114,7 @@ public class CastSuppliesTracker {
     {
         resetRuneCount();
         updateContainerItems();
+        checkGlobalVarbits();
     }
 
     private void updateContainerItems()
@@ -129,8 +130,6 @@ public class CastSuppliesTracker {
         Arrays.stream(inventoryItems).forEach(i -> updateInventoryItem(i.getId(), i.getQuantity()));
         Arrays.stream(equipmentItems).forEach(i -> updateEquipmentItems(i.getId(), i.getQuantity()));
     }
-
-    // Varbit/4145 fountain of runes
 
     private void updateInventoryItem(int itemId, int quantity)
     {
@@ -151,7 +150,7 @@ public class CastSuppliesTracker {
         }
         else if (itemId == ItemID.RUNE_POUCH_27086) // Emir's Arena Rune pouch (assumed to contain all, unable to get specific runes yet)
         {
-            addUnlimitedRunePouch();
+            addUnlimitedRunes();
             return;
         }
 
@@ -183,6 +182,14 @@ public class CastSuppliesTracker {
         });
     }
 
+    private void checkGlobalVarbits()
+    {
+        final boolean nearFountain = client.getVarbitValue(FOUNTAIN_OF_RUNES_VARBIT) == 1;
+
+        if (nearFountain)
+            addUnlimitedRunes();
+    }
+
     private void updateRunePouchItems(boolean isDivine)
     {
         final EnumComposition runepouchEnum = client.getEnum(EnumID.RUNEPOUCH_RUNE);
@@ -209,7 +216,7 @@ public class CastSuppliesTracker {
         runeCount.put(ItemID.SOUL_RUNE, Integer.MAX_VALUE);
     }
 
-    private void addUnlimitedRunePouch()
+    private void addUnlimitedRunes()
     {
         final Set<Integer> allRuneIds = RuneIds.getAllRuneIds();
         allRuneIds.forEach(id -> runeCount.put(id, Integer.MAX_VALUE));
@@ -276,6 +283,8 @@ public class CastSuppliesTracker {
 
     private boolean isRelevantVarbit(int varbitId)
     {
-        return Arrays.stream(RUNE_POUCH_RUNE_VARBITS).anyMatch(v -> v == varbitId) || Arrays.stream(RUNE_POUCH_AMOUNT_VARBITS).anyMatch(v -> v == varbitId);
+        return varbitId == FOUNTAIN_OF_RUNES_VARBIT ||
+            Arrays.stream(RUNE_POUCH_RUNE_VARBITS).anyMatch(v -> v == varbitId) ||
+            Arrays.stream(RUNE_POUCH_AMOUNT_VARBITS).anyMatch(v -> v == varbitId);
     }
 }
