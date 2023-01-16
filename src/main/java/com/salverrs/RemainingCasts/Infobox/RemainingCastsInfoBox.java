@@ -151,7 +151,7 @@ public class RemainingCastsInfoBox extends InfoBox
 
     private int getCostDivision(int itemId, int cost, int available)
     {
-        if (available >= 1 && RuneIds.isReqStaff(itemId))
+        if (available == Integer.MAX_VALUE || (available >= 1 && RuneIds.isReqStaff(itemId)))
             return Integer.MAX_VALUE;
 
         return cost != 0 && available != 0 ? Math.floorDiv(available, cost) : 0;
