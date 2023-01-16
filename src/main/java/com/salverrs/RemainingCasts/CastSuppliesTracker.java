@@ -185,6 +185,7 @@ public class CastSuppliesTracker {
         if (items != null)
         {
             Arrays.stream(items).forEach(i -> {
+                unlimitedRunes.add(i);
                 updateRuneCount(i, quantity);
             });
         }
