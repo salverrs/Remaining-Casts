@@ -172,14 +172,22 @@ public class CastSuppliesTracker {
         if (RuneIds.isEnchantProduct(itemId))
             updateRuneCount(itemId, quantity);
 
-        final Integer[] runes = RuneIds.getItemIdsFromEquipment(itemId);
-        if (runes == null)
-            return;
+        final Integer[] runes = RuneIds.getRuneIdsFromEquipment(itemId);
+        if (runes != null)
+        {
+            Arrays.stream(runes).forEach(r -> {
+                unlimitedRunes.add(r);
+                updateRuneCount(r, Integer.MAX_VALUE);
+            });
+        }
 
-        Arrays.stream(runes).forEach(r -> {
-            unlimitedRunes.add(r);
-            updateRuneCount(r, Integer.MAX_VALUE);
-        });
+        final Integer[] items = RuneIds.getItemIdsFromEquipment(itemId);
+        if (items != null)
+        {
+            Arrays.stream(items).forEach(i -> {
+                updateRuneCount(i, quantity);
+            });
+        }
     }
 
     private void checkGlobalVarbits()

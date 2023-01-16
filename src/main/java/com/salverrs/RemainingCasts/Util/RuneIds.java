@@ -7,7 +7,8 @@ import java.util.*;
 public class RuneIds {
 
     private static final Map<Integer, Integer[]> RuneMap = new HashMap<>();
-    private static final Map<Integer, Integer[]> StaffMap = new HashMap<>();
+    private static final Map<Integer, Integer[]> ReqStaffMap = new HashMap<>();
+    private static final Map<Integer, Integer> StaffMap = new HashMap<>();
     private static final Map<Integer, Integer> TomeMap = new HashMap<>();
     private static final Map<Integer, Integer> IngredientMap = new HashMap<>();
     private static final List<Integer> EnchantProducts = new ArrayList<>();
@@ -32,22 +33,27 @@ public class RuneIds {
         return EnchantProducts.contains(itemId);
     }
 
-    public static Integer[] getItemIdsFromEquipment(int equipmentId)
+    public static boolean isReqStaff(int itemId)
+    {
+        return ReqStaffMap.containsKey(itemId);
+    }
+
+    public static Integer[] getRuneIdsFromEquipment(int equipmentId)
     {
         if (StaffMap.containsKey(equipmentId))
         {
-            final Set<Integer> staffRuneIds = new HashSet<>();
-            final Integer[] equipmentRuneIds = StaffMap.get(equipmentId);
-            for (int id : equipmentRuneIds)
-                staffRuneIds.addAll(Arrays.asList(RuneMap.getOrDefault(id, new Integer[] { id })));
-
-            return staffRuneIds.toArray(new Integer[0]);
+            return RuneMap.getOrDefault(StaffMap.get(equipmentId), new Integer[] {StaffMap.get(equipmentId)});
         }
         else if (TomeMap.containsKey(equipmentId))
         {
             return RuneMap.getOrDefault(TomeMap.get(equipmentId), null);
         }
         return null;
+    }
+
+    public static Integer[] getItemIdsFromEquipment(int equipmentId)
+    {
+        return ReqStaffMap.getOrDefault(equipmentId, null);
     }
 
     static
@@ -134,54 +140,54 @@ public class RuneIds {
         RuneMap.put(ItemID.LAVA_RUNE, new Integer[] {ItemID.EARTH_RUNE, ItemID.FIRE_RUNE});
 
         // Staffs
-        StaffMap.put(ItemID.STAFF_OF_AIR, new Integer[] {ItemID.AIR_RUNE });
-        StaffMap.put(ItemID.STAFF_OF_WATER, new Integer[] {ItemID.WATER_RUNE});
-        StaffMap.put(ItemID.STAFF_OF_EARTH, new Integer[] {ItemID.EARTH_RUNE});
-        StaffMap.put(ItemID.STAFF_OF_FIRE, new Integer[] {ItemID.FIRE_RUNE});
+        StaffMap.put(ItemID.STAFF_OF_AIR, ItemID.AIR_RUNE);
+        StaffMap.put(ItemID.STAFF_OF_WATER, ItemID.WATER_RUNE);
+        StaffMap.put(ItemID.STAFF_OF_EARTH, ItemID.EARTH_RUNE);
+        StaffMap.put(ItemID.STAFF_OF_FIRE, ItemID.FIRE_RUNE);
 
-        StaffMap.put(ItemID.AIR_BATTLESTAFF, new Integer[] {ItemID.AIR_RUNE});
-        StaffMap.put(ItemID.WATER_BATTLESTAFF, new Integer[] {ItemID.WATER_RUNE});
-        StaffMap.put(ItemID.EARTH_BATTLESTAFF, new Integer[] {ItemID.EARTH_RUNE});
-        StaffMap.put(ItemID.FIRE_BATTLESTAFF, new Integer[] {ItemID.FIRE_RUNE});
+        StaffMap.put(ItemID.AIR_BATTLESTAFF, ItemID.AIR_RUNE);
+        StaffMap.put(ItemID.WATER_BATTLESTAFF, ItemID.WATER_RUNE);
+        StaffMap.put(ItemID.EARTH_BATTLESTAFF, ItemID.EARTH_RUNE);
+        StaffMap.put(ItemID.FIRE_BATTLESTAFF, ItemID.FIRE_RUNE);
 
-        StaffMap.put(ItemID.MYSTIC_AIR_STAFF, new Integer[] {ItemID.AIR_RUNE});
-        StaffMap.put(ItemID.MYSTIC_WATER_STAFF, new Integer[] {ItemID.WATER_RUNE});
-        StaffMap.put(ItemID.MYSTIC_EARTH_STAFF, new Integer[] {ItemID.EARTH_RUNE});
-        StaffMap.put(ItemID.MYSTIC_FIRE_STAFF, new Integer[] {ItemID.FIRE_RUNE});
+        StaffMap.put(ItemID.MYSTIC_AIR_STAFF, ItemID.AIR_RUNE);
+        StaffMap.put(ItemID.MYSTIC_WATER_STAFF, ItemID.WATER_RUNE);
+        StaffMap.put(ItemID.MYSTIC_EARTH_STAFF, ItemID.EARTH_RUNE);
+        StaffMap.put(ItemID.MYSTIC_FIRE_STAFF, ItemID.FIRE_RUNE);
 
-        StaffMap.put(ItemID.MIST_BATTLESTAFF, new Integer[] {ItemID.MIST_RUNE});
-        StaffMap.put(ItemID.DUST_BATTLESTAFF, new Integer[] {ItemID.DUST_RUNE});
-        StaffMap.put(ItemID.MUD_BATTLESTAFF, new Integer[] {ItemID.MUD_RUNE});
-        StaffMap.put(ItemID.SMOKE_BATTLESTAFF, new Integer[] {ItemID.SMOKE_RUNE});
-        StaffMap.put(ItemID.STEAM_BATTLESTAFF, new Integer[] {ItemID.STEAM_RUNE});
-        StaffMap.put(ItemID.LAVA_BATTLESTAFF, new Integer[] {ItemID.LAVA_RUNE});
+        StaffMap.put(ItemID.MIST_BATTLESTAFF, ItemID.MIST_RUNE);
+        StaffMap.put(ItemID.DUST_BATTLESTAFF, ItemID.DUST_RUNE);
+        StaffMap.put(ItemID.MUD_BATTLESTAFF, ItemID.MUD_RUNE);
+        StaffMap.put(ItemID.SMOKE_BATTLESTAFF, ItemID.SMOKE_RUNE);
+        StaffMap.put(ItemID.STEAM_BATTLESTAFF, ItemID.STEAM_RUNE);
+        StaffMap.put(ItemID.LAVA_BATTLESTAFF, ItemID.LAVA_RUNE);
 
-        StaffMap.put(ItemID.MYSTIC_MIST_STAFF, new Integer[] {ItemID.MIST_RUNE});
-        StaffMap.put(ItemID.MYSTIC_DUST_STAFF, new Integer[] {ItemID.DUST_RUNE});
-        StaffMap.put(ItemID.MYSTIC_MUD_STAFF, new Integer[] {ItemID.MUD_RUNE});
-        StaffMap.put(ItemID.MYSTIC_SMOKE_STAFF, new Integer[] {ItemID.SMOKE_RUNE});
-        StaffMap.put(ItemID.MYSTIC_STEAM_STAFF, new Integer[] {ItemID.STEAM_RUNE});
-        StaffMap.put(ItemID.MYSTIC_LAVA_STAFF, new Integer[] {ItemID.LAVA_RUNE});
+        StaffMap.put(ItemID.MYSTIC_MIST_STAFF, ItemID.MIST_RUNE);
+        StaffMap.put(ItemID.MYSTIC_DUST_STAFF, ItemID.DUST_RUNE);
+        StaffMap.put(ItemID.MYSTIC_MUD_STAFF, ItemID.MUD_RUNE);
+        StaffMap.put(ItemID.MYSTIC_SMOKE_STAFF, ItemID.SMOKE_RUNE);
+        StaffMap.put(ItemID.MYSTIC_STEAM_STAFF, ItemID.STEAM_RUNE);
+        StaffMap.put(ItemID.MYSTIC_LAVA_STAFF, ItemID.LAVA_RUNE);
 
-        StaffMap.put(ItemID.BRYOPHYTAS_STAFF, new Integer[] {ItemID.NATURE_RUNE});
+        StaffMap.put(ItemID.BRYOPHYTAS_STAFF, ItemID.NATURE_RUNE);
 
         // Required staffs
-        StaffMap.put(ItemID.IBANS_STAFF, new Integer[] {ItemID.IBANS_STAFF});
-        StaffMap.put(ItemID.IBANS_STAFF_U, new Integer[] {ItemID.IBANS_STAFF});
-        StaffMap.put(ItemID.SLAYERS_STAFF, new Integer[] {ItemID.SLAYERS_STAFF});
-        StaffMap.put(ItemID.SLAYERS_STAFF_E, new Integer[] {ItemID.SLAYERS_STAFF});
-        StaffMap.put(ItemID.SARADOMIN_STAFF, new Integer[] {ItemID.SARADOMIN_STAFF});
-        StaffMap.put(ItemID.GUTHIX_STAFF, new Integer[] {ItemID.GUTHIX_STAFF});
-        StaffMap.put(ItemID.VOID_KNIGHT_MACE, new Integer[] {ItemID.GUTHIX_STAFF});
-        StaffMap.put(ItemID.VOID_KNIGHT_MACE_L, new Integer[] {ItemID.GUTHIX_STAFF});
-        StaffMap.put(ItemID.ZAMORAK_STAFF, new Integer[] {ItemID.ZAMORAK_STAFF});
+        ReqStaffMap.put(ItemID.IBANS_STAFF, new Integer[] {ItemID.IBANS_STAFF});
+        ReqStaffMap.put(ItemID.IBANS_STAFF_U, new Integer[] {ItemID.IBANS_STAFF});
+        ReqStaffMap.put(ItemID.SLAYERS_STAFF, new Integer[] {ItemID.SLAYERS_STAFF});
+        ReqStaffMap.put(ItemID.SLAYERS_STAFF_E, new Integer[] {ItemID.SLAYERS_STAFF});
+        ReqStaffMap.put(ItemID.SARADOMIN_STAFF, new Integer[] {ItemID.SARADOMIN_STAFF});
+        ReqStaffMap.put(ItemID.GUTHIX_STAFF, new Integer[] {ItemID.GUTHIX_STAFF});
+        ReqStaffMap.put(ItemID.VOID_KNIGHT_MACE, new Integer[] {ItemID.GUTHIX_STAFF});
+        ReqStaffMap.put(ItemID.VOID_KNIGHT_MACE_L, new Integer[] {ItemID.GUTHIX_STAFF});
+        ReqStaffMap.put(ItemID.ZAMORAK_STAFF, new Integer[] {ItemID.ZAMORAK_STAFF});
 
-        StaffMap.put(ItemID.STAFF_OF_THE_DEAD, new Integer[] {ItemID.SLAYERS_STAFF, ItemID.ZAMORAK_STAFF});
-        StaffMap.put(ItemID.STAFF_OF_THE_DEAD_23613, new Integer[] {ItemID.SLAYERS_STAFF, ItemID.ZAMORAK_STAFF});
-        StaffMap.put(ItemID.TOXIC_STAFF_OF_THE_DEAD, new Integer[] {ItemID.SLAYERS_STAFF, ItemID.ZAMORAK_STAFF});
-        StaffMap.put(ItemID.TOXIC_STAFF_UNCHARGED, new Integer[] {ItemID.SLAYERS_STAFF, ItemID.ZAMORAK_STAFF});
-        StaffMap.put(ItemID.STAFF_OF_LIGHT, new Integer[] {ItemID.SLAYERS_STAFF, ItemID.SARADOMIN_STAFF});
-        StaffMap.put(ItemID.STAFF_OF_BALANCE, new Integer[] {ItemID.SLAYERS_STAFF, ItemID.GUTHIX_STAFF});
+        ReqStaffMap.put(ItemID.STAFF_OF_THE_DEAD, new Integer[] {ItemID.SLAYERS_STAFF, ItemID.ZAMORAK_STAFF});
+        ReqStaffMap.put(ItemID.STAFF_OF_THE_DEAD_23613, new Integer[] {ItemID.SLAYERS_STAFF, ItemID.ZAMORAK_STAFF});
+        ReqStaffMap.put(ItemID.TOXIC_STAFF_OF_THE_DEAD, new Integer[] {ItemID.SLAYERS_STAFF, ItemID.ZAMORAK_STAFF});
+        ReqStaffMap.put(ItemID.TOXIC_STAFF_UNCHARGED, new Integer[] {ItemID.SLAYERS_STAFF, ItemID.ZAMORAK_STAFF});
+        ReqStaffMap.put(ItemID.STAFF_OF_LIGHT, new Integer[] {ItemID.SLAYERS_STAFF, ItemID.SARADOMIN_STAFF});
+        ReqStaffMap.put(ItemID.STAFF_OF_BALANCE, new Integer[] {ItemID.SLAYERS_STAFF, ItemID.GUTHIX_STAFF});
 
         // Tomes
         TomeMap.put(ItemID.TOME_OF_WATER, ItemID.WATER_RUNE);

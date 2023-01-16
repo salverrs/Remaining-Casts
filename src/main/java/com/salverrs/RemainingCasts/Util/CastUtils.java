@@ -4,11 +4,15 @@ public class CastUtils {
 
     public static String getShortenedAmount(double amount)
     {
-        if (amount > 1000000000)
+        if (amount == Integer.MAX_VALUE)
+        {
+            return "*";
+        }
+        else if (amount > 1000000000)
         {
             return String.format("%.1f", amount / 1000000000) + "b";
         }
-        if (amount > 1000000)
+        else if (amount > 1000000)
         {
             return String.format("%.1f", amount / 1000000) + "m";
         }
@@ -20,6 +24,11 @@ public class CastUtils {
         {
             return Integer.toString((int)amount);
         }
+    }
+
+    public static String formatCastAmount(int amount)
+    {
+        return amount == Integer.MAX_VALUE ? "*" : Integer.toString(amount);
     }
 }
 

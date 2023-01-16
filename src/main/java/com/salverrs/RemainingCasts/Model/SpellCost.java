@@ -1,5 +1,6 @@
 package com.salverrs.RemainingCasts.Model;
 
+import com.salverrs.RemainingCasts.Util.RuneIds;
 import lombok.Getter;
 import net.runelite.api.ItemID;
 
@@ -41,7 +42,16 @@ public class SpellCost {
             {
                 final int available = runeCount.get(targetRuneId);
                 final int cost = quantities[i];
-                castsPerRune.add(Math.floorDiv(available, cost));
+                final boolean isReqStaff = available >= 1 && RuneIds.isReqStaff(targetRuneId);
+
+                if (available == Integer.MAX_VALUE || isReqStaff)
+                {
+                    castsPerRune.add(Integer.MAX_VALUE);
+                }
+                else
+                {
+                    castsPerRune.add(Math.floorDiv(available, cost));
+                }
             }
             else
             {

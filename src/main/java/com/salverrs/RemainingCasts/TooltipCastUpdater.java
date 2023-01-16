@@ -226,7 +226,7 @@ public class TooltipCastUpdater {
         if (numCasts == -1)
             return "N/A";
 
-        return config.shortenCastAmounts() ? CastUtils.getShortenedAmount(numCasts) : Integer.toString(numCasts);
+        return config.shortenCastAmounts() ? CastUtils.getShortenedAmount(numCasts) : CastUtils.formatCastAmount(numCasts);
     }
 
 }

@@ -4,6 +4,7 @@ import com.salverrs.RemainingCasts.Model.SpellCost;
 import com.salverrs.RemainingCasts.Model.SpellInfo;
 import com.salverrs.RemainingCasts.RemainingCastsConfig;
 import com.salverrs.RemainingCasts.Util.CastUtils;
+import com.salverrs.RemainingCasts.Util.RuneIds;
 import lombok.Getter;
 import lombok.Setter;
 import net.runelite.api.ItemComposition;
@@ -100,12 +101,13 @@ public class RemainingCastsInfoBox extends InfoBox
         if (remainingCasts == -1)
             return "N/A";
 
-        return config.shortenCastAmounts() ? CastUtils.getShortenedAmount(remainingCasts) : Integer.toString(remainingCasts);
+        return config.shortenCastAmounts() ? CastUtils.getShortenedAmount(remainingCasts) : CastUtils.formatCastAmount(remainingCasts);
     }
 
     private void buildTooltip()
     {
-        String base = spellInfo.getName() + " - " + remainingCasts + (remainingCasts != 1 ? " casts " : " cast ") + "remaining";
+        String base = spellInfo.getName() + " - " + (remainingCasts != Integer.MAX_VALUE ? remainingCasts : "Unlimited");
+        base += (remainingCasts != 1 ? " casts " : " cast ") + "remaining";
 
         if (!config.showDetailedTooltip() || advTooltipDisabled)
         {
@@ -121,7 +123,7 @@ public class RemainingCastsInfoBox extends InfoBox
             final int runeId = runes[i];
             final int quantity = quantities[i];
             final int available = runeCount.getOrDefault(runeId, 0);
-            final int floorDiv = quantity != 0 && available != 0 ? Math.floorDiv(available, quantity) : 0;
+            final int floorDiv = getCostDivision(runeId, quantity, available);
             final String runeName = runeNames[i];
             if (runeName == null || runeName.equals(""))
             {
@@ -136,7 +138,7 @@ public class RemainingCastsInfoBox extends InfoBox
                     .append("/")
                     .append(quantity);
 
-            if (available != Integer.MAX_VALUE)
+            if (available != Integer.MAX_VALUE && floorDiv != Integer.MAX_VALUE)
             {
                 advTooltip.append(" (")
                     .append(floorDiv)
@@ -145,6 +147,14 @@ public class RemainingCastsInfoBox extends InfoBox
         }
 
         tooltip = advTooltip.toString();
+    }
+
+    private int getCostDivision(int itemId, int cost, int available)
+    {
+        if (available >= 1 && RuneIds.isReqStaff(itemId))
+            return Integer.MAX_VALUE;
+
+        return cost != 0 && available != 0 ? Math.floorDiv(available, cost) : 0;
     }
 
 }
