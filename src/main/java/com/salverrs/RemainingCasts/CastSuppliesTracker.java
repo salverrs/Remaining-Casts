@@ -213,7 +213,9 @@ public class CastSuppliesTracker {
                 continue;
 
             final int runeId = runepouchEnum.getIntValue(id);
-            updateRuneCount(runeId, quantity);
+            final Integer[] runes = RuneIds.getRuneIds(runeId);
+            if (runes != null)
+                Arrays.stream(runes).forEach(r -> updateRuneCount(r, quantity));
         }
     }
 
