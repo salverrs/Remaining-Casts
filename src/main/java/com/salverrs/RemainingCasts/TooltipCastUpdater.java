@@ -13,11 +13,13 @@ import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.eventbus.Subscribe;
+import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.util.Text;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
+import java.util.function.Consumer;
 
 @Singleton
 public class TooltipCastUpdater {
@@ -25,6 +27,7 @@ public class TooltipCastUpdater {
     private int mageBookTooltipWidgetId = -1;
     private int autocastTooltipWidgetId = -1;
     private boolean active = false;
+    private ArrayList<String> pinnedSpellNames;
 
     @Inject
     private Client client;
@@ -37,6 +40,7 @@ public class TooltipCastUpdater {
     public void start()
     {
         active = true;
+        pinnedSpellNames = new ArrayList<>(Text.fromCSV(config.pinnedSpells()));
     }
 
     public void stop()
@@ -47,11 +51,13 @@ public class TooltipCastUpdater {
     @Subscribe
     public void onClientTick(ClientTick event)
     {
-        if (!active || !config.enableMenuTooltip()|| client.getGameState() != GameState.LOGGED_IN || client.isMenuOpen())
+        if (!active || (!config.enableMenuTooltip() && !config.enableInfoboxes()) || client.getGameState() != GameState.LOGGED_IN || client.isMenuOpen())
             return;
 
         final List<MenuEntry> entries = new ArrayList<>(Arrays.asList(client.getMenuEntries()));
         boolean appendToOption = false;
+        SpellInfo spellInfoFound = null;
+        String formattedSpellInfoName = null;
 
         if (entries.stream().anyMatch(e -> e.getOption().equals("Examine")))
             return;
@@ -76,11 +82,17 @@ public class TooltipCastUpdater {
                 if (spellInfo == null)
                     continue;
 
-                final Map<Integer, Integer> runeCount = castSuppliesTracker.getLastRuneCount();
-                final int numCasts = spellInfo.getSpellCost().getRemainingCasts(runeCount);
-                final String casts = "(" + getRemainingCastsString(numCasts) + ")";
+                spellInfoFound = spellInfo;
+                formattedSpellInfoName = spellInfo.getName();
 
-                entry.setOption(spellInfo.getName() + " " + casts);
+                if (config.enableMenuTooltip())
+                {
+                    final Map<Integer, Integer> runeCount = castSuppliesTracker.getLastRuneCount();
+                    final int numCasts = spellInfo.getSpellCost().getRemainingCasts(runeCount);
+                    final String casts = "(" + getRemainingCastsString(numCasts) + ")";
+                    entry.setOption(spellInfo.getName() + " " + casts);
+                }
+
                 continue;
             }
 
@@ -92,11 +104,24 @@ public class TooltipCastUpdater {
             {
                 spellName = Text.removeFormattingTags(entry.getOption()); // Autocast menu uses option only
                 spellInfo = SpellIds.getSpellByName(spellName);
+                formattedSpellInfoName = entry.getOption();
                 appendToOption = true;
+            }
+            else
+            {
+                formattedSpellInfoName = entry.getTarget();
             }
 
             if (spellInfo == null)
-                return;
+                continue;
+
+            spellInfoFound = spellInfo;
+
+            if (!config.enableMenuTooltip()) // Continue if only using pin functionality
+                continue;
+
+            if (entry.getOption().equals("Configure") || entry.getOption().equals("Warnings")) // Ignore entries other than cast entries
+                continue;
 
             final Map<Integer, Integer> runeCount = castSuppliesTracker.getLastRuneCount();
             final int numCasts = spellInfo.getSpellCost().getRemainingCasts(runeCount);
@@ -118,8 +143,20 @@ public class TooltipCastUpdater {
 
                 entry.setTarget(target + " " + casts);
             }
-
         }
+
+        // Pin/Unpin infobox menu functionality
+        if (spellInfoFound == null || !config.enableInfoboxes())
+            return;
+
+        final SpellInfo target = spellInfoFound;
+        boolean isPinned = Text.fromCSV(config.pinnedSpells()).stream().anyMatch(s -> s.equalsIgnoreCase(target.getName()));
+
+        client.createMenuEntry(-1)
+                .setOption(isPinned ? "Unpin" : "Pin")
+                .setTarget(formattedSpellInfoName)
+                .setType(MenuAction.RUNELITE)
+                .onClick(isPinned ? unpinSpell(target) : pinSpell(target));
     }
 
     @Subscribe
@@ -200,6 +237,14 @@ public class TooltipCastUpdater {
 
     }
 
+    @Subscribe
+    public void onConfigChanged(ConfigChanged configChanged)
+    {
+        if (!configChanged.getGroup().equals(RemainingCastsPlugin.CONFIG_GROUP))
+            return;
+
+        pinnedSpellNames = new ArrayList<>(Text.fromCSV(config.pinnedSpells()));
+    }
 
     private Widget getTitleWidget(Widget[] tooltipChildren)
     {
@@ -231,6 +276,24 @@ public class TooltipCastUpdater {
             return "N/A";
 
         return config.shortenCastAmounts() ? CastUtils.getShortenedAmount(numCasts) : CastUtils.formatCastAmount(numCasts);
+    }
+
+    private Consumer<MenuEntry> pinSpell(SpellInfo spellInfo)
+    {
+        return e ->
+        {
+            pinnedSpellNames.add(spellInfo.getName());
+            config.setPinnedSpells(Text.toCSV(pinnedSpellNames));
+        };
+    }
+
+    private Consumer<MenuEntry> unpinSpell(SpellInfo spellInfo)
+    {
+        return e ->
+        {
+            pinnedSpellNames.removeIf(s -> s.equalsIgnoreCase(spellInfo.getName()));
+            config.setPinnedSpells(Text.toCSV(pinnedSpellNames));
+        };
     }
 
 }

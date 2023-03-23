@@ -96,6 +96,11 @@ public class RemainingCastsInfoBox extends InfoBox
         return (Instant.now().getEpochSecond() - lastUpdated);
     }
 
+    public void resetActiveTime()
+    {
+        this.lastUpdated = 0;
+    }
+
     private String getRemainingCastsString()
     {
         if (remainingCasts == -1)

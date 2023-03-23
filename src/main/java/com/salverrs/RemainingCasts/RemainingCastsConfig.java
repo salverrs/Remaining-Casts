@@ -185,6 +185,13 @@ public interface RemainingCastsConfig extends Config
 	}
 
 	@ConfigItem(
+			keyName = "pinnedSpells",
+			name = "",
+			description = ""
+	)
+	void setPinnedSpells(String playerName);
+
+	@ConfigItem(
 			keyName = "infoBoxTextColor",
 			name = "Text color",
 			description = "The color of the text displayed in the infobox",

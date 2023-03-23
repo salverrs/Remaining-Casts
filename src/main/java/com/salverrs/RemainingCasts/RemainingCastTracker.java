@@ -381,11 +381,16 @@ public class RemainingCastTracker {
         infoBoxManager.addInfoBox(infoBox);
         castBoxes.put(spellInfo, infoBox);
 
-        if (!isPinned)
+        if (isPinned)
+        {
+            infoBox.resetActiveTime();
+        }
+        else
+        {
             spellQueue.add(spellInfo);
+        }
 
         checkCastBoxLimit();
-
         return infoBox;
     }
 
