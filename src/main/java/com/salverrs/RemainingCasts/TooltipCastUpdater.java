@@ -181,7 +181,11 @@ public class TooltipCastUpdater {
                 return;
             }
 
-            final SpellInfo spellInfo = SpellIds.getSpellByName(details.getSpellName());
+            SpellInfo spellInfo = SpellIds.getSpellByName(details.getSpellName());
+
+            if (spellInfo == null)
+                spellInfo = SpellIds.getSpellByName(details.getSpellName().concat(" Teleport")); // Normal Ancients compatibility ('Teleport' is not included in new spell tooltip)
+
             if (spellInfo == null)
                 return;
 

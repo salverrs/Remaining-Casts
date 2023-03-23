@@ -149,15 +149,14 @@ public class RemainingCastTracker {
             return;
 
         final Widget widget = entry.getWidget();
-        final String spellName = Text.removeFormattingTags(target);
+        final String spellName = widget != null ?  Text.removeFormattingTags(widget.getName())
+                : Text.removeFormattingTags(target).replaceAll(" ->.*", "");
 
         if (SpellIds.getSpellByName(spellName) != null)
             lastCastSpellName = spellName;
 
         if (widget == null || widget.getTargetVerb().isEmpty()) // Spell actually cast, not just selected
-        {
             lastManualCastSpellTime = Instant.now().getEpochSecond();
-        }
 
         if (widget == null)
             return;
@@ -256,13 +255,13 @@ public class RemainingCastTracker {
         return info != null && info.getSpellCost().matchesCost(cost, changes.getUnlimitedRunes());
     }
 
-    private SpellInfo getSpellFromManualCast(RuneChanges changes)
+    private SpellInfo getSpellFromManualCast(RuneChanges changes) // Name lookup now default since resizable sprite changes
     {
-        SpellInfo spellInfo = lastCastSpriteId != -1 ? SpellIds.getSpellBySpriteId(lastCastSpriteId) : null;
+        SpellInfo spellInfo = lastCastSpellName != null ? SpellIds.getSpellByName(lastCastSpellName) : null;
         if (matchesSpellInfo(spellInfo, changes))
             return spellInfo;
 
-        spellInfo = lastCastSpellName != null ? SpellIds.getSpellByName(lastCastSpellName) : null;
+        spellInfo = lastCastSpriteId != -1 ? SpellIds.getSpellBySpriteId(lastCastSpriteId) : null;
         if (matchesSpellInfo(spellInfo, changes))
             return spellInfo;
 

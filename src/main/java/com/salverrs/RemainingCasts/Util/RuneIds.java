@@ -171,6 +171,9 @@ public class RuneIds {
 
         StaffMap.put(ItemID.BRYOPHYTAS_STAFF, ItemID.NATURE_RUNE);
 
+        StaffMap.put(ItemID.KODAI_WAND, ItemID.WATER_RUNE);
+        StaffMap.put(ItemID.KODAI_WAND_23626, ItemID.WATER_RUNE);
+
         // Required staffs
         ReqStaffMap.put(ItemID.IBANS_STAFF, new Integer[] {ItemID.IBANS_STAFF});
         ReqStaffMap.put(ItemID.IBANS_STAFF_U, new Integer[] {ItemID.IBANS_STAFF});
@@ -191,7 +194,7 @@ public class RuneIds {
 
         // Tomes
         TomeMap.put(ItemID.TOME_OF_WATER, ItemID.WATER_RUNE);
-        TomeMap.put(ItemID.TOME_OF_FIRE, ItemID.TOME_OF_FIRE);
+        TomeMap.put(ItemID.TOME_OF_FIRE, ItemID.FIRE_RUNE);
 
         // Ingredients
         IngredientMap.put(ItemID.UNPOWERED_ORB, ItemID.UNPOWERED_ORB);

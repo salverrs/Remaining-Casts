@@ -160,6 +160,16 @@ public class SpellIds {
         Spells.add(new SpellInfo("Ice Barrage", SpriteID.SPELL_ICE_BARRAGE, new SpellCost(new int[] {ItemID.DEATH_RUNE, ItemID.BLOOD_RUNE, ItemID.WATER_RUNE}, new int[] {4, 2, 6})));
         Spells.add(new SpellInfo("Ghorrock Teleport", SpriteID.SPELL_GHORROCK_TELEPORT, new SpellCost(new int[] {ItemID.LAW_RUNE, ItemID.WATER_RUNE}, new int[] {2, 8})));
 
+        //Normal Ancient Teleports compatibility (name map only)
+        Spells.add(new SpellInfo("Edgeville Teleport", SpriteID.SPELL_PADDEWWA_TELEPORT, new SpellCost(new int[] {ItemID.LAW_RUNE, ItemID.AIR_RUNE, ItemID.FIRE_RUNE}, new int[] {2, 1, 1})));
+        Spells.add(new SpellInfo("Digsite Teleport", SpriteID.SPELL_SENNTISTEN_TELEPORT, new SpellCost(new int[] {ItemID.LAW_RUNE, ItemID.SOUL_RUNE}, new int[] {2, 1})));
+        Spells.add(new SpellInfo("Canifis Teleport", SpriteID.SPELL_KHARYRLL_TELEPORT, new SpellCost(new int[] {ItemID.LAW_RUNE, ItemID.BLOOD_RUNE}, new int[] {2, 1})));
+        Spells.add(new SpellInfo("Ice Mountain Teleport", SpriteID.SPELL_LASSAR_TELEPORT, new SpellCost(new int[] {ItemID.LAW_RUNE, ItemID.WATER_RUNE}, new int[] {2, 4})));
+        Spells.add(new SpellInfo("Forgotten Cemetery Teleport", SpriteID.SPELL_DAREEYAK_TELEPORT, new SpellCost(new int[] {ItemID.LAW_RUNE, ItemID.AIR_RUNE, ItemID.FIRE_RUNE}, new int[] {2, 2, 3})));
+        Spells.add(new SpellInfo("Graveyard of Shadows Teleport", SpriteID.SPELL_CARRALLANGAR_TELEPORT, new SpellCost(new int[] {ItemID.LAW_RUNE, ItemID.SOUL_RUNE}, new int[] {2, 2})));
+        Spells.add(new SpellInfo("Demonic Ruins Teleport", SpriteID.SPELL_ANNAKARL_TELEPORT, new SpellCost(new int[] {ItemID.LAW_RUNE, ItemID.BLOOD_RUNE}, new int[] {2, 2})));
+        Spells.add(new SpellInfo("Frozen Waste Plateau Teleport", SpriteID.SPELL_GHORROCK_TELEPORT, new SpellCost(new int[] {ItemID.LAW_RUNE, ItemID.WATER_RUNE}, new int[] {2, 8})));
+
         // Lunar Spellbook
 
         // Lunar Home Teleport
@@ -288,8 +298,8 @@ public class SpellIds {
                 }
             }
 
-                if (!SpellNameMap.containsKey(name))
-                    SpellNameMap.put(name.toLowerCase(), s);
+            if (!SpellNameMap.containsKey(name))
+                SpellNameMap.put(name.toLowerCase(), s);
         });
     }
 }
